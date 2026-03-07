@@ -1,0 +1,39 @@
+
+# Environment variables (Tutte, ovunque siano)
+.env
+.env.local
+.env.production
+**/.env
+**/.env.local
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Dependencies (Cerca in tutte le sottocartelle)
+**/node_modules/
+**/vendor/
+
+# Next.js specifico
+**/.next/
+**/out/
+**/build/
+
+# Docker volumes
+mysql-data/
+redis-data/
+
+# Laravel specifico
+**/storage/*.key
+**/storage/framework/cache/data/*
+**/storage/framework/sessions/*
+**/storage/framework/views/*
+**/storage/logs/*
+
+repomix-output.xml

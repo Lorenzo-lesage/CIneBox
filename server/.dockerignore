@@ -1,0 +1,35 @@
+.git
+.gitignore
+.gitattributes
+.env
+.env.example
+.editorconfig
+README.md
+docker-compose.yml
+.dockerignore
+
+# Laravel specific
+/node_modules
+/public/hot
+/public/storage
+/storage/*.key
+/vendor
+.phpunit.result.cache
+Homestead.json
+Homestead.yaml
+npm-debug.log
+yarn-error.log
+
+# IDE
+.idea
+.vscode
+.fleet
+.phpactor.json
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Tests
+/tests
+phpunit.xml

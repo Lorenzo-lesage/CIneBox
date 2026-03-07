@@ -1,0 +1,104 @@
+
+services:
+  # MySQL Database
+  database:
+    image: mysql:8.4.7
+    container_name: cinebox_database
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: cinebox
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USER: cinebox_user
+      MYSQL_PASSWORD: cinebox_pass
+    ports:
+      - "3308:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+    networks:
+      - cinebox-network
+
+  # Redis Cache
+  redis:
+    image: redis:8.6-alpine
+    container_name: cinebox_redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    networks:
+      - cinebox-network
+
+  # Laravel Backend (lo configureremo dopo)
+  server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    container_name: cinebox_server
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./server:/var/www/html
+    depends_on:
+      - database
+      - redis
+    networks:
+      - cinebox-network
+    environment:
+      - DB_HOST=database
+      - REDIS_HOST=redis
+
+  # Next.js Frontend
+  web:
+    container_name: cinebox_web
+    restart: unless-stopped
+    networks:
+      - cinebox-network
+    ports:
+      - "3000:3000"
+    environment:
+    - NEXT_PUBLIC_API_URL=http://server:8000
+
+    # --- VERSIONE OFFLINE (Sviluppo - Attiva) ---
+    # Utilizza l'immagine base per permettere l'Hot Reload (modifiche istantanee)
+    image: node:22-alpine
+    working_dir: /app
+    command: sh -c "npm install && npm run dev"
+    volumes:
+      - ./web:/app
+      - /app/node_modules # Protegge i pacchetti del container da quelli del PC
+
+    # --- VERSIONE ONLINE (Produzione - Commentata) ---
+    # Per attivarla: commenta le 4 righe sopra (image, working_dir, command, volumes) 
+    # e decommenta le 3 righe qui sotto.
+    # build:
+    #   context: ./web
+    #   dockerfile: Dockerfile
+
+
+  # Laravel Reverb (WebSocket)
+  reverb:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    container_name: cinebox_reverb
+    restart: unless-stopped
+    command: php artisan reverb:start --host=0.0.0.0 --port=8080
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./server:/var/www/html
+    depends_on:
+      - database
+      - redis
+    networks:
+      - cinebox-network
+
+volumes:
+  mysql-data:
+  redis-data:
+
+networks:
+  cinebox-network:
+    driver: bridge
