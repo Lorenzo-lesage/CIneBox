@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
-use App\Models\Comment;
+use App\Http\Controllers\Controller;
+use App\Models\Rating;
 use Illuminate\Http\Request;
 
-class CommentController extends Controller
+class RatingController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -26,7 +27,7 @@ class CommentController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Comment $comment)
+    public function show(Rating $rating)
     {
         //
     }
@@ -34,7 +35,7 @@ class CommentController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Comment $comment)
+    public function update(Request $request, Rating $rating)
     {
         //
     }
@@ -42,7 +43,7 @@ class CommentController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Comment $comment)
+    public function destroy(Rating $rating)
     {
         //
     }
