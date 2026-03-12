@@ -37,7 +37,7 @@ class MovieController extends Controller
         $movieData = $this->tmdbService->getMovie($tmdbId, 'en-US');
 
         // 2. Check if we have local data (ratings, etc.)
-        $localMovie = Movie::where('tmdb_id', $tmdbId)->first();
+        $localMovie = Movie::firstWhere('tmdb_id', $tmdbId);
 
         if ($localMovie) {
             $movieData->community_rating = $localMovie->avg_rating;
@@ -60,5 +60,15 @@ class MovieController extends Controller
     public function destroy(Movie $movie)
     {
         //
+    }
+
+    // Pagina "Vedi tutti" per Genere
+    public function getByGenre(int $genreId, Request $request)
+    {
+        $page = $request->input('page', 1);
+
+        return response()->json(
+            $this->tmdbService->getMoviesList('discover/movie', ['with_genres' => $genreId], $page)
+        );
     }
 }

@@ -1,0 +1,28 @@
+<?php
+
+namespace App\Http\Controllers\Api;
+
+use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+use App\Services\TmdbService;
+
+class SearchController extends Controller
+{
+    public function __construct(
+        protected TmdbService $tmdbService
+    ) {}
+
+    public function search(Request $request)
+    {
+        $request->validate([
+            'q' => 'required|string|min:2',
+            'page' => 'integer|min:1'
+        ]);
+
+        return $this->tmdbService->getMoviesList(
+            'search/movie',
+            ['query' => $request->input('q')],
+            $request->input('page', 1)
+        );
+    }
+}
