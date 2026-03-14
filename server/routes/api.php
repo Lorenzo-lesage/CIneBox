@@ -39,6 +39,9 @@ Route::prefix('v1')->group(function () {
             ->name('movies.show');
     });
 
+    // Movie trailer
+    Route::get('/movies/{id}/trailer', [MovieController::class, 'trailer'])->name('movies.trailer');
+
 
     /*
     |--------------------------------------------------------------------------
@@ -47,6 +50,10 @@ Route::prefix('v1')->group(function () {
     */
 
     Route::prefix('genres')->group(function () {
+
+        /// Index of genres
+        Route::get('/Genres/{type}', [GenreController::class, 'index'])
+            ->name('genres.index');
 
         // Movies by genre
         Route::get('/{genreId}/movies', [GenreController::class, 'movies'])

@@ -13,14 +13,17 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (\Illuminate\Foundation\Configuration\Middleware $middleware): void {
 
-        // CORS should run first
-        $middleware->prepend(\Illuminate\Http\Middleware\HandleCors::class);
+        // Configura il CORS in modo esplicito per Laravel 12
+        $middleware->validateCsrfTokens(except: [
+            'api/*', // Esclude il controllo CSRF per le API
+        ]);
 
-        // API authentication via Sanctum
-        $middleware->prepend(\Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class);
+        $middleware->statefulApi(); // Fondamentale per Sanctum e Next.js
 
-        // Rate limiting for API requests
-        $middleware->prepend(\Illuminate\Routing\Middleware\ThrottleRequests::class);
+        // Questo sostituisce il vecchio file cors.php
+        $middleware->alias([
+            'cors' => \Illuminate\Http\Middleware\HandleCors::class,
+        ]);
     })
     ->withExceptions(require __DIR__ . '/exceptions.php')
     ->create();

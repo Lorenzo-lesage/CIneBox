@@ -5,21 +5,27 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Movie;
 use Illuminate\Http\Request;
+use App\Services\TmdbService;
 
 class MovieController extends Controller
 {
-    public function __construct(
-        protected \App\Services\TmdbService $tmdbService
-    ) {}
+    public function __construct(protected \App\Services\TmdbService $tmdbService) {}
 
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
-    }
+        $type = $request->input('type', 'movie');
+        $page = $request->input('page', 1);
+        $sortBy = $this->tmdbService->getSortBy($request);
 
+        $endpoint = ($type === 'tv') ? 'discover/tv' : 'discover/movie';
+
+        $results = $this->tmdbService->getMoviesList($endpoint, [], $page, $sortBy);
+
+        return response()->json($results);
+    }
     /**
      * Store a newly created resource in storage.
      */
@@ -31,14 +37,13 @@ class MovieController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(int $tmdbId)
+    public function show(int $tmdbId, Request $request)
     {
-        // 1. Get data from TMDB
+        $type = $request->query('type', 'movie');
         $movieData = $this->tmdbService->getMovie($tmdbId, 'en-US');
 
         // 2. Check if we have local data (ratings, etc.)
         $localMovie = Movie::firstWhere('tmdb_id', $tmdbId);
-
         if ($localMovie) {
             $movieData->community_rating = $localMovie->avg_rating;
         }
@@ -62,13 +67,22 @@ class MovieController extends Controller
         //
     }
 
-    // Pagina "Vedi tutti" per Genere
-    public function getByGenre(int $genreId, Request $request)
+    /**
+     * Summary of trailer
+     * @param int $id
+     * @param TmdbService $tmdbService
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function trailer(int $id, TmdbService $tmdbService)
     {
-        $page = $request->input('page', 1);
+        $trailerKey = $tmdbService->getMovieTrailer($id);
 
-        return response()->json(
-            $this->tmdbService->getMoviesList('discover/movie', ['with_genres' => $genreId], $page)
-        );
+        if (!$trailerKey) {
+            return response()->json(['message' => 'Trailer not found'], 404);
+        }
+
+        return response()->json([
+            'trailer_key' => $trailerKey
+        ]);
     }
 }
