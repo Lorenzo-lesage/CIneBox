@@ -1,15 +1,16 @@
 "use client";
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState } from "react";
 import { useInView } from "react-intersection-observer";
 
-// Libs
-import { getHomeData } from "@/lib/tmdb";
+// React Query & Services
+import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
+import { fetchHomeData, fetchMovieTrailer } from "@/services/movieService";
 
 // Components
 import { MovieRow } from "@/components/home/MovieRow";
-
-// UI
-import { Button } from "@/components/ui/button";
+import { HeroBanner } from "@/components/home/HeroBanner";
+import { Switcher } from "@/components/shared/Switcher";
+import { HeroTrailerModal } from "@/components/home/HeroTrailerModal";
 
 export default function HomePage() {
   /*
@@ -18,14 +19,48 @@ export default function HomePage() {
   |--------------------------------------------------------------------------
   */
 
-  const [data, setData] = useState<any>(null);
   const [type, setType] = useState<"movie" | "tv">("movie");
-  const [genres, setGenres] = useState<any[]>([]);
-  const [page, setPage] = useState(1);
-  const [hasMore, setHasMore] = useState(true);
-  const [loadingMore, setLoadingMore] = useState(false);
-
   const { ref, inView } = useInView({ threshold: 0.1 });
+  const [openTrailer, setOpenTrailer] = useState(false);
+
+  /*
+  |--------------------------------------------------------------------------
+  | Query
+  |--------------------------------------------------------------------------
+  */
+
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, status } =
+    useInfiniteQuery({
+      queryKey: ["homeData", type],
+      queryFn: ({ pageParam = 1 }) => fetchHomeData(type, pageParam),
+      initialPageParam: 1,
+      getNextPageParam: (lastPage) =>
+        lastPage.hasMore ? lastPage.nextPage : undefined,
+      staleTime: 1000 * 60 * 5,
+      gcTime: 1000 * 60 * 30,
+      placeholderData: (prev) => prev,
+    });
+
+  const heroMovie = data?.pages[0]?.hero?.[0];
+
+  const { data: trailerData } = useQuery({
+    queryKey: ["trailer", heroMovie?.id],
+    queryFn: () => fetchMovieTrailer(heroMovie.id),
+    enabled: !!heroMovie?.id,
+    staleTime: 1000 * 60 * 30,
+  });
+
+  /*
+  |--------------------------------------------------------------------------
+  | Hooks
+  |--------------------------------------------------------------------------
+  */
+
+  useEffect(() => {
+    if (inView && hasNextPage && !isFetchingNextPage) {
+      fetchNextPage();
+    }
+  }, [inView, hasNextPage, isFetchingNextPage, fetchNextPage]);
 
   /*
   |--------------------------------------------------------------------------
@@ -36,60 +71,31 @@ export default function HomePage() {
   /**
    * Function to load more data
    */
-  const loadData = useCallback(
-    async (isInitial = false, currentPage: number) => {
-      if (loadingMore || (!isInitial && !hasMore)) return;
+  const getProcessedData = () => {
+    if (!data) return null;
 
-      setLoadingMore(true);
-      try {
-        const response = await getHomeData(type, currentPage);
+    const firstPage = data.pages[0];
 
-        // Estraiamo i generi dalla risposta
-        const extractedGenres = Object.keys(response)
-          .filter(
-            (key) => !["hero", "popular", "hasMore", "nextPage"].includes(key),
-          )
-          .map((key) => ({ key, ...response[key] }));
+    // Prendiamo i generi filtrando via hero e popular (così non si ripetono nel loop)
+    const genreRows = data.pages.flatMap((page, pageIndex) =>
+      Object.keys(page)
+        .filter(
+          (key) => !["hero", "popular", "hasMore", "nextPage"].includes(key),
+        )
+        .map((key) => ({
+          ...page[key],
+          key: `${key}-${pageIndex}`,
+          genreId: key,
+        })),
+    );
 
-        if (isInitial) {
-          setData(response);
-          setGenres([]); // Reset generi extra quando cambiamo tipo
-          setPage(1);
-        } else {
-          setGenres((prev) => [...prev, ...extractedGenres]);
-          setPage(currentPage);
-        }
-
-        setHasMore(response.hasMore);
-      } catch (error) {
-        console.error("Errore:", error);
-      } finally {
-        setLoadingMore(false);
-      }
-    },
-    [type, hasMore, loadingMore],
-  );
-
-  /*
-  |--------------------------------------------------------------------------
-  | Hooks
-  |--------------------------------------------------------------------------
-  */
-
-  useEffect(() => {
-    getHomeData(type, 1).then(setData).catch(console.error);
-  }, [type]);
-
-  useEffect(() => {
-    loadData(true, 1);
-  }, [type]);
-
-  // Hook per lo scroll infinito
-  useEffect(() => {
-    if (inView && hasMore && !loadingMore && data) {
-      loadData(false, page + 1);
-    }
-  }, [inView, hasMore, loadingMore, data, page, loadData]);
+    return {
+      heroBanner: firstPage.hero?.[0], // Il film singolo per lo sfondo
+      heroList: firstPage.hero || [], // L'array completo per il carosello "Settimana"
+      popularList: firstPage.popular || [], // L'array per il carosello "Popolari"
+      genres: genreRows, // Il resto dei caroselli dinamici
+    };
+  };
 
   /*
   |--------------------------------------------------------------------------
@@ -97,73 +103,68 @@ export default function HomePage() {
   |--------------------------------------------------------------------------
   */
 
-  if (!data)
-    return <div className="p-10 text-white bg-black h-screen">Loading...</div>;
+  const processedData = getProcessedData();
 
-  console.log(data);
+  if (status === "pending")
+    return (
+      <div className="p-10 text-white bg-black h-screen flex items-center justify-center">
+        Loading...
+      </div>
+    );
 
   return (
     <main className="min-h-screen bg-black text-white pb-20">
-      {/* Hero Header */}
-      <div className="relative w-full flex items-end p-10 bg-gradient-to-t from-black to-transparent mb-10">
-        {data.hero?.[0] && (
-          <div className="z-10 space-y-4">
-            <h1 className="text-5xl md:text-7xl font-extrabold uppercase italic">
-              {data.hero[0].title || data.hero[0].name}
-            </h1>
-          </div>
-        )}
-      </div>
+      {/* --- Hero Header ---- */}
+      {processedData?.heroBanner && (
+        <HeroBanner
+          movie={processedData.heroBanner}
+          trailerKey={trailerData?.trailer_key}
+          openTrailer={openTrailer}
+          setOpenTrailer={setOpenTrailer}
+        />
+      )}
 
-      {/* Switchers */}
-      <div className="flex gap-2 px-10 mb-10">
-        <Button
-          variant={type === "movie" ? "destructive" : "outline"}
-          onClick={() => setType("movie")}
-        >
-          Movies
-        </Button>
-        <Button
-          variant={type === "tv" ? "destructive" : "outline"}
-          onClick={() => setType("tv")}
-        >
-          TV Series
-        </Button>
-      </div>
+      {/* --- Trailer Modal --- */}
+      {openTrailer && (
+        <HeroTrailerModal
+          videoKey={trailerData?.trailer_key || ""}
+          setOpenTrailer={setOpenTrailer}
+        />
+      )}
 
-      <div className="space-y-12 px-20">
-        {/* 1. Trending (Sempre presente nella pagina 1) */}
-        <MovieRow title="Trending Now" movies={data.popular || []} />
+      {/* --- Switchers --- */}
+      <Switcher type={type} setType={setType} />
 
-        {/* 2. Generi della Pagina 1 */}
-        {Object.keys(data)
-          .filter(
-            (key) => !["hero", "popular", "hasMore", "nextPage"].includes(key),
-          )
-          .map((key) => (
-            <MovieRow
-              key={key}
-              title={data[key].label || key}
-              movies={data[key].data || []}
-              genreId={key}
-            />
-          ))}
+      {/* --- Movies --- */}
+      <div className="space-y-2 px-10 md:px-20">
+        {/* Hero List */}
+        <MovieRow title="New Releases" movies={processedData?.heroList} />
+        {/* Trending */}
+        <MovieRow title="Trending Now" movies={processedData?.popularList} />
 
-        {/* 3. Generi caricati con lo scroll (Pagina 2, 3...) */}
-        {genres.map((genre) => (
+        {/* Genres */}
+        {processedData?.genres.map((genre) => (
           <MovieRow
-            key={`${genre.key}-${page}`}
+            key={genre.key}
             title={genre.label}
             movies={genre.data || []}
-            genreId={genre.key}
+            genreId={genre.genreId}
           />
         ))}
       </div>
 
-      {/* 4. SENSORE PER INFINITE SCROLL */}
-      <div ref={ref} className="h-40 flex items-center justify-center w-full">
-        {loadingMore && (
-          <div className="animate-pulse text-red-600 font-bold">Loading...</div>
+      {/* Loading Trigger */}
+      <div
+        ref={ref}
+        className="h-40 flex items-center justify-center w-full mt-10"
+      >
+        {isFetchingNextPage && (
+          <div className="flex flex-col items-center gap-2">
+            <div className="w-8 h-8 border-4 border-red-600 border-t-transparent rounded-full animate-spin"></div>
+            <span className="text-zinc-500 text-xs font-medium">
+              Loading more movies...
+            </span>
+          </div>
         )}
       </div>
     </main>

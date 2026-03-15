@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 // Components
-import { MovieCard } from "./MovieCard";
+import { MovieCard } from "../shared/Card/MovieCard";
 
 // UI
 import {
@@ -31,13 +31,13 @@ export function MovieRow({ title, movies, genreId }: MovieRowProps) {
   if (!movies || movies.length === 0) return null;
 
   return (
-    <div className="space-y-4 py-4">
+    <div className="space-y-2 py-2">
       <h2 className="text-2xl font-semibold px-4 md:px-10 capitalize tracking-tight">
         {title}
       </h2>
-      <div className="my-5">
+      <div className="my-2">
         <Carousel className="w-full">
-          <CarouselContent>
+          <CarouselContent className="w-full pt-2">
             {movies.map((movie) => (
               <CarouselItem
                 key={movie.id}

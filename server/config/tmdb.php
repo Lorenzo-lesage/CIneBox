@@ -3,7 +3,7 @@
 return [
     'genres' => [
         ['key' => 'action',      'movie' => 28,    'tv' => 10759, 'label' => 'Action & Adventure'],
-        ['key' => 'adventure',   'movie' => 12,    'tv' => 10759, 'label' => 'Adventure'],
+        ['key' => 'adventure',   'movie' => 12,    'tv' => null, 'label' => 'Adventure'],
         ['key' => 'comedy',      'movie' => 35,    'tv' => 35,    'label' => 'Comedy'],
         ['key' => 'drama',       'movie' => 18,    'tv' => 18,    'label' => 'Drama'],
         ['key' => 'scifi',       'movie' => 878,   'tv' => 10765, 'label' => 'Sci-Fi & Fantasy'],
