@@ -116,27 +116,27 @@ export function MovieCard({ movie }: { movie: Movie }) {
 
   return (
     <Card
-      className="h-80 bg-transparent border-none group cursor-pointer overflow-visible"
+      className="h-64 bg-transparent border-none group cursor-pointer overflow-visible"
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
       <CardContent
-        className={`p-0 relative w-full h-full transition-all duration-300 hover:scale-110 ${
+        className={`p-0 relative w-full h-full transition-all duration-300 md:hover:scale-118 ${
           showVideo
-            ? "scale-110 shadow-2xl z-50 overflow-visible"
+            ? "md:scale-118 shadow-2xl z-50 overflow-visible"
             : "overflow-visible"
         }`}
       >
         <div>
           {/* Poster */}
-          <div className="relative w-full h-64">
+          <div className="relative w-full h-50">
             <Image
               src={`https://image.tmdb.org/t/p/w780${isMobile ? movie.poster_path : movie.backdrop_path || movie.poster_path}`}
               alt={movie.title || movie.name || "Poster"}
               fill
               sizes="100%"
               className={`object-cover transition-opacity duration-500 ${
-                showVideo ? "opacity-0" : "opacity-100"
+                showVideo && !isMobile ? "opacity-0" : "opacity-100"
               }`}
             />
             {/* Overlay gradient */}
@@ -144,7 +144,8 @@ export function MovieCard({ movie }: { movie: Movie }) {
           </div>
 
           {/* Player Video at hover */}
-          {showVideo && trailerData && (
+          
+          {showVideo && trailerData && !isMobile && (
             <div className="absolute inset-0 z-20 bg-black">
               <div className="relative h-full w-full">
                 <ReactPlayer
@@ -163,7 +164,7 @@ export function MovieCard({ movie }: { movie: Movie }) {
                     setActiveVideoId(isActive ? null : cardUniqueId)
                   }
                 >
-                  {isActive ? <VolumeOff /> : <Volume2 />}
+                  {isActive ? <Volume2 /> : <VolumeOff />}
                 </div>
               </div>
             </div>

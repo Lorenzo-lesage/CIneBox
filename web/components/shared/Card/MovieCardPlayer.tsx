@@ -24,7 +24,7 @@ export function MovieCardPlayer({
         className="cursor-pointer bg-black/50 p-1 rounded-full absolute bottom-4 left-4 text-white z-21"
         onClick={toggleActive}
       >
-        {isActive ? <VolumeOff /> : <Volume2 />}
+        {isActive ? <Volume2 /> : <VolumeOff />}
       </div>
     </div>
   );

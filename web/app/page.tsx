@@ -2,6 +2,9 @@
 import { useEffect, useState } from "react";
 import { useInView } from "react-intersection-observer";
 
+// Hooks
+import { useRandomHero } from "@/hooks/useRandomHero";
+
 // React Query & Services
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import { fetchHomeData, fetchMovieTrailer } from "@/services/movieService";
@@ -41,12 +44,13 @@ export default function HomePage() {
       placeholderData: (prev) => prev,
     });
 
-  const heroMovie = data?.pages[0]?.hero?.[0];
+  const firstPage = data?.pages?.[0];
+  const heroBanner = useRandomHero(firstPage?.hero);
 
   const { data: trailerData } = useQuery({
-    queryKey: ["trailer", heroMovie?.id],
-    queryFn: () => fetchMovieTrailer(heroMovie.id),
-    enabled: !!heroMovie?.id,
+    queryKey: ["trailer", heroBanner?.id],
+    queryFn: () => fetchMovieTrailer(heroBanner!.id as number),
+    enabled: !!heroBanner?.id,
     staleTime: 1000 * 60 * 30,
   });
 
@@ -90,7 +94,7 @@ export default function HomePage() {
     );
 
     return {
-      heroBanner: firstPage.hero?.[0], // Il film singolo per lo sfondo
+      heroBanner: heroBanner, // Il film singolo per lo sfondo
       heroList: firstPage.hero || [], // L'array completo per il carosello "Settimana"
       popularList: firstPage.popular || [], // L'array per il carosello "Popolari"
       genres: genreRows, // Il resto dei caroselli dinamici
@@ -136,7 +140,7 @@ export default function HomePage() {
       <Switcher type={type} setType={setType} />
 
       {/* --- Movies --- */}
-      <div className="space-y-2 px-10 md:px-20">
+      <div className="space-y-2 ps-10 md:ps-20 overflow-hidden">
         {/* Hero List */}
         <MovieRow title="New Releases" movies={processedData?.heroList} />
         {/* Trending */}
