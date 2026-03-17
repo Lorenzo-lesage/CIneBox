@@ -15,6 +15,9 @@ import { HeroBanner } from "@/components/home/HeroBanner";
 import { Switcher } from "@/components/shared/Switcher";
 import { HeroTrailerModal } from "@/components/home/HeroTrailerModal";
 
+// UI
+import { Spinner } from "@/components/ui/spinner";
+
 export default function HomePage() {
   /*
   |--------------------------------------------------------------------------
@@ -112,7 +115,7 @@ export default function HomePage() {
   if (status === "pending")
     return (
       <div className="p-10 text-white bg-black h-screen flex items-center justify-center">
-        Loading...
+        <Spinner className="size-8" />
       </div>
     );
 

@@ -1,14 +1,15 @@
+// Icons
 import { Info, Heart } from "lucide-react";
+
+// Types
+import { MovieCardControlsProps } from "@/types/components";
 
 export function MovieCardControls({
   isFavorited,
   toggleFavorite,
-}: {
-  isFavorited: boolean;
-  toggleFavorite: () => void;
-}) {
+}: MovieCardControlsProps) {
   return (
-    <div className="absolute top-0 right-[50%] transform translate-x-1/2 -translate-y-1/2 flex items-center gap-2">
+    <>
       <div className="cursor-pointer bg-black/50 p-1 rounded-full">
         <Info />
       </div>
@@ -18,6 +19,6 @@ export function MovieCardControls({
           onClick={toggleFavorite}
         />
       </div>
-    </div>
+    </>
   );
 }

@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { useState } from "react";
 
 // Components
 import { MovieCard } from "../shared/Card/MovieCard";
@@ -16,14 +15,12 @@ import {
 // Icons
 import { ChevronRight } from "lucide-react";
 
-interface MovieRowProps {
-  title: string;
-  movies: any[];
-  genreId?: string | number;
-}
+// Types
+import { MovieRowProps } from "@/types/components";
 
 export function MovieRow({ title, movies, genreId }: MovieRowProps) {
   /*
+  
   |--------------------------------------------------------------------------
   | Render
   |--------------------------------------------------------------------------
@@ -33,9 +30,11 @@ export function MovieRow({ title, movies, genreId }: MovieRowProps) {
 
   return (
     <div className="space-y-2 py-4">
-      <h2 className="text-xl md:text-2xl font-semibold px-4 md:px-10 capitalize tracking-tight">
-        {title}
-      </h2>
+      <div>
+        <h2 className="text-xl md:text-2xl font-semibold px-4 md:px-10 capitalize tracking-tight">
+          {title}
+        </h2>
+      </div>
 
       <div className="relative">
         <Carousel className="w-full group/row">

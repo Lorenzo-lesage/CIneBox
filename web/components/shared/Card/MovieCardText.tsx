@@ -1,8 +1,24 @@
-export function MovieCardText({ title, vote }: { title: string; vote: number }) {
+// types
+import { MovieCardTextProps } from "@/types/components";
+
+export function MovieCardText({ movie }: MovieCardTextProps) {
   return (
-    <div className="absolute inset-0 flex flex-col justify-end p-4">
-      <p className="text-white font-bold text-sm truncate">{title}</p>
-      <span className="text-yellow-400 text-xs">★ {vote.toFixed(1)}</span>
-    </div>
+    <>
+      <p
+        className="text-white font-bold text-sm truncate"
+        style={{ textShadow: "2px 2px 2px rgba(0, 0, 0, 1)" }}
+      >
+        {movie.title || movie.name}
+      </p>
+      <div className="flex items-center gap-2 mt-1">
+        {/* Rating */}
+        <span
+          className="text-yellow-400 text-xs"
+          style={{ textShadow: "2px 2px 2px rgba(0, 0, 0, 0.8)" }}
+        >
+          ★ {movie?.vote_average?.toFixed(1)}
+        </span>
+      </div>
+    </>
   );
 }

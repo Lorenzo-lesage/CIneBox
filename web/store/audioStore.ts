@@ -1,9 +1,7 @@
 import { create } from "zustand";
 
-interface AudioState {
-  activeVideoId: string | null;
-  setActiveVideoId: (id: string | null) => void;
-}
+// Types
+import { AudioState } from "@/types/store";
 
 
 export const useAudioStore = create<AudioState>((set) => ({

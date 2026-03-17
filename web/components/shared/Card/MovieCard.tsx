@@ -1,11 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import Image from "next/image";
-import ReactPlayer from "react-player";
 
 // Custom Hooks
-import { useIsMobile } from "@/hooks/useIsMobile";
 import { useMute } from "@/hooks/useMute";
 
 // Store
@@ -15,22 +12,16 @@ import { useAudioStore } from "@/store/audioStore";
 import { fetchMovieTrailer } from "@/services/movieService";
 import { useQuery } from "@tanstack/react-query";
 
+// Componets
+import { MovieCardControls } from "./MovieCardControls";
+import { MovieCardPlayer } from "./MovieCardPlayer";
+import { MovieCardText } from "./MovieCardText";
+
 // UI
 import { Card, CardContent } from "@/components/ui/card";
 
-// Icons
-import { Info, Heart, Volume2, VolumeOff } from "lucide-react";
-
-interface Movie {
-  id: number;
-  title?: string;
-  name?: string;
-  poster_path: string;
-  backdrop_path: string;
-  vote_average: number;
-  overview: string;
-  trailer_url?: string;
-}
+// Types
+import { Movie } from "@/types/movie";
 
 export function MovieCard({ movie }: { movie: Movie }) {
   /*
@@ -42,7 +33,6 @@ export function MovieCard({ movie }: { movie: Movie }) {
   const [isFavorited, setIsFavorited] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const [showVideo, setShowVideo] = useState(false);
-  const isMobile = useIsMobile();
   const { playerRef, forceMute } = useMute(true);
   const { activeVideoId, setActiveVideoId } = useAudioStore();
   const cardUniqueId = `card-${movie.id}`;
@@ -127,81 +117,27 @@ export function MovieCard({ movie }: { movie: Movie }) {
             : "overflow-visible"
         }`}
       >
-        <div>
-          {/* Poster */}
-          <div className="relative w-full h-50">
-            <Image
-              src={`https://image.tmdb.org/t/p/w780${isMobile ? movie.poster_path : movie.backdrop_path || movie.poster_path}`}
-              alt={movie.title || movie.name || "Poster"}
-              fill
-              sizes="100%"
-              className={`object-cover transition-opacity duration-500 ${
-                showVideo && !isMobile ? "opacity-0" : "opacity-100"
-              }`}
-            />
-            {/* Overlay gradient */}
-            <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent pointer-events-none" />
-          </div>
-
-          {/* Player Video at hover */}
-          
-          {showVideo && trailerData && !isMobile && (
-            <div className="absolute inset-0 z-20 bg-black">
-              <div className="relative h-full w-full">
-                <ReactPlayer
-                  ref={playerRef}
-                  src={`https://www.youtube.com/watch?v=${trailerData.trailer_key}`}
-                  playing
-                  controls={false}
-                  muted={!isActive}
-                  width="100%"
-                  height="100%"
-                />
-
-                <div
-                  className="cursor-pointer bg-black/50 p-1 rounded-full absolute bottom-4 left-4 text-white z-21"
-                  onClick={() =>
-                    setActiveVideoId(isActive ? null : cardUniqueId)
-                  }
-                >
-                  {isActive ? <Volume2 /> : <VolumeOff />}
-                </div>
-              </div>
-            </div>
-          )}
-        </div>
+        <MovieCardPlayer
+          trailerKey={trailerData?.trailer_key || ""}
+          isActive={isActive}
+          toggleActive={() => setActiveVideoId(isActive ? null : cardUniqueId)}
+          movie={movie}
+          showVideo={showVideo}
+          playerRef={playerRef}
+        />
 
         {/* --- Content Card --- */}
         <div className="absolute inset-0 flex flex-col justify-end p-4">
           {/* Button detail and like */}
           <div className="absolute top-0 right-[50%] text-white z-21 transform translate-x-1/2 -translate-y-1/2 z-21 flex items-center gap-2">
-            <div className="cursor-pointer bg-black/50 p-1 rounded-full">
-              <Info />
-            </div>
-            <div className="cursor-pointer bg-black/50 p-1 rounded-full">
-              <Heart
-                className={`${isFavorited ? "text-red-500 fill-red-500" : ""}`}
-                onClick={() => setIsFavorited(!isFavorited)}
-              />
-            </div>
+            <MovieCardControls
+              isFavorited={isFavorited}
+              toggleFavorite={() => setIsFavorited(!isFavorited)}
+            />
           </div>
 
-          {/* Title */}
-          <p
-            className="text-white font-bold text-sm truncate"
-            style={{ textShadow: "2px 2px 2px rgba(0, 0, 0, 1)" }}
-          >
-            {movie.title || movie.name}
-          </p>
-          <div className="flex items-center gap-2 mt-1">
-            {/* Rating */}
-            <span
-              className="text-yellow-400 text-xs"
-              style={{ textShadow: "2px 2px 2px rgba(0, 0, 0, 0.8)" }}
-            >
-              ★ {movie.vote_average.toFixed(1)}
-            </span>
-          </div>
+          {/* Text */}
+          <MovieCardText movie={movie} />
         </div>
       </CardContent>
     </Card>

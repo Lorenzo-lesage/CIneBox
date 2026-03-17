@@ -1,17 +1,19 @@
 "use client";
-import React from "react";
-import ReactPlayer from "react-player";
+
 import Image from "next/image";
-import { Button } from "@/components/ui/button";
+import ReactPlayer from "react-player";
+
+// Store
 import { useAudioStore } from "@/store/audioStore";
+
+// UI
+import { Button } from "@/components/ui/button";
+
+// Icons
 import { Volume2, VolumeOff, Expand } from "lucide-react";
 
-interface HeroBannerProps {
-  movie: any;
-  trailerKey?: string;
-  openTrailer: boolean;
-  setOpenTrailer: (open: boolean) => void;
-}
+// Types
+import { HeroBannerProps } from "@/types/components";
 
 export function HeroBanner({
   movie,
@@ -71,7 +73,7 @@ export function HeroBanner({
         ) : (
           <Image
             src={`https://image.tmdb.org/t/p/original${movie.backdrop_path}`}
-            alt={movie.title || movie.name}
+            alt={movie.title || movie.name || "Poster"}
             fill
             className="object-cover"
           />
