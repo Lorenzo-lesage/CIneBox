@@ -80,8 +80,8 @@ export function HeroBanner({
         )}
 
         {/* Gradients */}
-        <div className="absolute inset-0 bg-gradient-to-r from-black via-black/300 to-transparent md:block hidden" />
-        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-r from-background/30 via-transparent to-transparent/300 md:block hidden" />
+        <div className="absolute inset-0 bg-gradient-to-t from-background via-background/20 to-transparent" />
       </div>
 
       {/* Content */}
@@ -105,7 +105,7 @@ export function HeroBanner({
           {movie.title || movie.name}
         </h2>
 
-        <p className="text-sm md:text-lg text-zinc-300 line-clamp-2 md:line-clamp-3 drop-shadow-md hidden md:block">
+        <p className="text-sm md:text-lg text-foreground line-clamp-2 md:line-clamp-3 drop-shadow-md hidden md:block">
           {movie.overview}
         </p>
 

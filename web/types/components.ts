@@ -1,7 +1,13 @@
 import { Movie } from "./movie";
 
 export interface HeroBannerProps {
-  movie: Movie;
+  movie: {
+    id: string | number;
+    title?: string;
+    name?: string;
+    backdrop_path?: string;
+    overview?: string;
+  };
   trailerKey?: string;
   openTrailer: boolean;
   setOpenTrailer: (open: boolean) => void;
@@ -34,4 +40,11 @@ export interface MovieCardPlayerProps {
 
 export interface MovieCardTextProps {
   movie: Pick<Movie, "title" | "name" | "vote_average">;
+}
+
+export interface ThemeItemProps {
+  active: boolean;
+  onClick: () => void;
+  icon: React.ReactNode;
+  label: string;
 }

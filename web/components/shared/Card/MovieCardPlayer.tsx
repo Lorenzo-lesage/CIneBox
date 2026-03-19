@@ -46,7 +46,7 @@ export function MovieCardPlayer({
           }`}
         />
         {/* Overlay gradient */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent pointer-events-none" />
       </div>
 
       {/* Player Video at hover */}
@@ -64,7 +64,7 @@ export function MovieCardPlayer({
             />
 
             <div
-              className="cursor-pointer bg-black/50 p-1 rounded-full absolute bottom-4 left-4 text-white z-21"
+              className="cursor-pointer bg-background/50 p-1 rounded-full absolute bottom-4 left-4 text-white z-21"
               onClick={toggleActive}
             >
               {isActive ? <Volume2 /> : <VolumeOff />}

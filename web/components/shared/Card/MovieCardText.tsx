@@ -6,7 +6,7 @@ export function MovieCardText({ movie }: MovieCardTextProps) {
     <>
       <p
         className="text-white font-bold text-sm truncate"
-        style={{ textShadow: "2px 2px 2px rgba(0, 0, 0, 1)" }}
+        style={{ textShadow: "0px 0px 4px rgba(0, 0, 0, 1)" }}
       >
         {movie.title || movie.name}
       </p>
@@ -14,7 +14,7 @@ export function MovieCardText({ movie }: MovieCardTextProps) {
         {/* Rating */}
         <span
           className="text-yellow-400 text-xs"
-          style={{ textShadow: "2px 2px 2px rgba(0, 0, 0, 0.8)" }}
+          style={{ textShadow: "1px 1px 1px rgba(0, 0, 0, 0.8)" }}
         >
           ★ {movie?.vote_average?.toFixed(1)}
         </span>

@@ -120,7 +120,7 @@ export default function HomePage() {
     );
 
   return (
-    <main className="min-h-screen bg-black text-white pb-20">
+    <main className="min-h-screen pb-20">
       {/* --- Hero Header ---- */}
       {processedData?.heroBanner && (
         <HeroBanner

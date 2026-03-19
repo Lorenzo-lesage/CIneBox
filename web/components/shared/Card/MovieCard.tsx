@@ -106,7 +106,7 @@ export function MovieCard({ movie }: { movie: Movie }) {
 
   return (
     <Card
-      className="h-64 bg-transparent border-none group cursor-pointer overflow-visible"
+      className="h-64 bg-transparent !border-0 !ring-0 group cursor-pointer overflow-visible "
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
