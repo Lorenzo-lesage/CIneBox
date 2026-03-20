@@ -20,6 +20,7 @@ export function HeroBanner({
   trailerKey,
   setOpenTrailer,
 }: HeroBannerProps) {
+
   /*
   |--------------------------------------------------------------------------
   | Data

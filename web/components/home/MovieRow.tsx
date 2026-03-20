@@ -91,6 +91,7 @@ export function MovieRow({ title, movies, genreId }: MovieRowProps) {
               opacity-0
              group-hover/row:opacity-100
               transition
+              cursor-pointer
             "
           />
 
@@ -101,6 +102,7 @@ export function MovieRow({ title, movies, genreId }: MovieRowProps) {
               opacity-0
               group-hover/row:opacity-100
               transition
+              cursor-pointer
             "
           />
         </Carousel>

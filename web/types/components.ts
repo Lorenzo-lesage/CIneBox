@@ -27,6 +27,7 @@ export interface MovieRowProps {
 export interface MovieCardControlsProps {
   isFavorited: boolean;
   toggleFavorite: () => void;
+  movie: Movie;
 }
 
 export interface MovieCardPlayerProps {

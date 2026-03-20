@@ -131,6 +131,7 @@ export function MovieCard({ movie }: { movie: Movie }) {
           {/* Button detail and like */}
           <div className="absolute top-0 right-[50%] text-white z-21 transform translate-x-1/2 -translate-y-1/2 z-21 flex items-center gap-2">
             <MovieCardControls
+              movie={movie}
               isFavorited={isFavorited}
               toggleFavorite={() => setIsFavorited(!isFavorited)}
             />

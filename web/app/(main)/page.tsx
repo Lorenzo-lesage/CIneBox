@@ -140,7 +140,9 @@ export default function HomePage() {
       )}
 
       {/* --- Switchers --- */}
-      <Switcher type={type} setType={setType} />
+      <div className="mt-10 w-full flex justify-center">
+        <Switcher type={type} setType={setType} />
+      </div>
 
       {/* --- Movies --- */}
       <div className="space-y-2 ps-10 md:ps-20 overflow-hidden">

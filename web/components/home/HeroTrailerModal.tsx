@@ -19,6 +19,9 @@ import { useIsMobile } from "@/hooks/useIsMobile";
 // UI
 import { Button } from "@/components/ui/button";
 
+// Icons
+import { CircleX } from "lucide-react";
+
 // Types
 import { HeroTrailerModalProps } from "@/types/components";
 
@@ -26,7 +29,6 @@ export function HeroTrailerModal({
   videoKey,
   setOpenTrailer,
 }: HeroTrailerModalProps) {
-  
   /*
   |--------------------------------------------------------------------------
   | Data
@@ -42,12 +44,13 @@ export function HeroTrailerModal({
   */
 
   return (
-    <div className="fixed inset-0 z-[100] bg-black flex items-center justify-center">
+    <div className="fixed inset-0 z-[100] bg-background flex items-center justify-center">
       <Button
         onClick={() => setOpenTrailer(false)}
-        className="absolute top-6 right-6 text-white text-3xl cursor-pointer"
+        className="absolute top-6 right-6 text-primary cursor-pointer bg-transparent hover:bg-secondary w-12 h-12 rounded-full flex items-center justify-cente"
+        variant="outline"
       >
-        ✕
+        <CircleX className="!w-8 !h-8" />
       </Button>
 
       <MediaController
