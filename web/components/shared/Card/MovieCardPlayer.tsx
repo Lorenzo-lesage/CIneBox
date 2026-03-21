@@ -1,8 +1,10 @@
 import ReactPlayer from "react-player";
-import Image from "next/image";
 
 // Hooks
 import { useIsMobile } from "@/hooks/useIsMobile";
+
+// Components
+import MovieImage from "./MovieImage";
 
 // Icons
 import { Volume2, VolumeOff } from "lucide-react";
@@ -36,17 +38,15 @@ export function MovieCardPlayer({
     <div>
       {/* Poster */}
       <div className="relative w-full h-50">
-        <Image
+        <MovieImage
           src={`https://image.tmdb.org/t/p/w780${isMobile ? movie.poster_path : movie.backdrop_path || movie.poster_path}`}
           alt={movie.title || movie.name || "Poster"}
-          fill
-          sizes="100%"
-          className={`object-cover transition-opacity duration-500 ${
+          className={`object-cover transition-opacity duration-500 h-full ${
             showVideo && !isMobile ? "opacity-0" : "opacity-100"
           }`}
         />
         {/* Overlay gradient */}
-        <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent pointer-events-none" />
+        <div className="absolute -bottom-1 inset-0 bg-gradient-to-t from-background via-transparent to-transparent pointer-events-none" />
       </div>
 
       {/* Player Video at hover */}
@@ -55,7 +55,7 @@ export function MovieCardPlayer({
           <div className="relative h-full w-full">
             <ReactPlayer
               ref={playerRef}
-              src={`https://www.youtube.com/watch?v=${trailerKey}`}
+              src={`https://www.youtube-nocookie.com/watch?v=${trailerKey}`}
               playing
               controls={false}
               muted={!isActive}

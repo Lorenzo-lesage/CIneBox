@@ -12,6 +12,9 @@ import { Button } from "@/components/ui/button";
 // Icons
 import { Volume2, VolumeOff, Expand } from "lucide-react";
 
+// Logo
+import logoImg from "@/public/images/CineBox.png";
+
 // Types
 import { HeroBannerProps } from "@/types/components";
 
@@ -20,7 +23,6 @@ export function HeroBanner({
   trailerKey,
   setOpenTrailer,
 }: HeroBannerProps) {
-
   /*
   |--------------------------------------------------------------------------
   | Data
@@ -58,9 +60,9 @@ export function HeroBanner({
         {/* Desktop video */}
         {trailerKey ? (
           <>
-            <div className=" w-full h-full">
+            <div className=" w-full h-full border-none">
               <ReactPlayer
-                src={`https://www.youtube.com/watch?v=${trailerKey}`}
+                src={`https://www.youtube-nocookie.com/watch?v=${trailerKey}`}
                 playing
                 muted={!isActive}
                 loop
@@ -76,7 +78,11 @@ export function HeroBanner({
             src={`https://image.tmdb.org/t/p/original${movie.backdrop_path}`}
             alt={movie.title || movie.name || "Poster"}
             fill
-            className="object-cover"
+            className="object-cover border-none"
+            priority
+            loading="eager"
+            fetchPriority="high"
+            sizes="100vw"
           />
         )}
 
@@ -98,13 +104,20 @@ export function HeroBanner({
         space-y-3 md:space-y-4
       "
       >
-        <h1 className="text-2xl md:text-6xl font-bold drop-shadow-lg">
-          CineBox
-        </h1>
 
-        <h2 className="text-xl md:text-3xl font-bold drop-shadow-lg hidden md:block">
+        <Image
+          src={logoImg} 
+          alt="CineBox Logo" 
+          className="w-auto  object-contain" 
+          priority 
+          style={{
+            filter: "drop-shadow(2px 2px 6px rgba(46, 4, 4, 0.87))",
+          }}
+        />
+
+        <h1 className="text-xl md:text-5xl font-bold drop-shadow-lg hidden md:block">
           {movie.title || movie.name}
-        </h2>
+        </h1>
 
         <p className="text-sm md:text-lg text-foreground line-clamp-2 md:line-clamp-3 drop-shadow-md hidden md:block">
           {movie.overview}

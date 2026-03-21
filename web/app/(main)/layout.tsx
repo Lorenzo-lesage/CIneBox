@@ -10,7 +10,7 @@ export default function MainLayout({
     <div className="bg-background">
       <Navbar />
       <div className="min-h-screen">
-        <main>{children}</main>
+        <main className=" overflow-hidden">{children}</main>
       </div>
       <Footer />
     </div>

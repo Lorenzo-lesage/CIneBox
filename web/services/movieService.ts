@@ -3,9 +3,9 @@ import { apiConfig } from "../config/apiConfig";
 
 /**
  * Fetch Home page data
- * @param type 
- * @param page 
- * @returns 
+ * @param type
+ * @param page
+ * @returns
  */
 export const fetchHomeData = async (type: "movie" | "tv", page: number = 1) => {
   const response = await axiosClient.get(apiConfig.endpoints.home(type, page));
@@ -14,8 +14,8 @@ export const fetchHomeData = async (type: "movie" | "tv", page: number = 1) => {
 
 /**
  * Fetch movie trailer
- * @param id 
- * @returns 
+ * @param id
+ * @returns
  */
 export const fetchMovieTrailer = async (id: number) => {
   const response = await axiosClient.get(apiConfig.endpoints.movieTrailer(id));
