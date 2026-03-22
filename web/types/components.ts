@@ -1,5 +1,19 @@
 import { Movie } from "./movie";
 
+export interface HomeDataResponse {
+  hero: Movie[];
+  popular: Movie[];
+  hasMore: boolean;
+  nextPage: number | null;
+  // Index Signature: permette di avere chiavi dinamiche come 'action', 'comedy', ecc.
+  [key: string]: any | GenreData | Movie[] | boolean | number | null;
+}
+
+export interface HomePageClientProps {
+  initialMovieData: HomeDataResponse;
+  initialTvData: HomeDataResponse;
+}
+
 export interface HeroBannerProps {
   movie: {
     id: string | number;

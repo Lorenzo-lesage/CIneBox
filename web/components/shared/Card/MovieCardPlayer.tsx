@@ -41,7 +41,7 @@ export function MovieCardPlayer({
         <MovieImage
           src={`https://image.tmdb.org/t/p/w780${isMobile ? movie.poster_path : movie.backdrop_path || movie.poster_path}`}
           alt={movie.title || movie.name || "Poster"}
-          className={`object-cover transition-opacity duration-500 h-full ${
+          className={`object-cover transition-opacity duration-500 h-full z-10 ${
             showVideo && !isMobile ? "opacity-0" : "opacity-100"
           }`}
         />

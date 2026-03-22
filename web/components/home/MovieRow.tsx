@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { cn } from "@/lib/utils";
 
 // Components
 import { MovieCard } from "../shared/Card/MovieCard";
@@ -42,14 +43,9 @@ export function MovieRow({ title, movies, genreId }: MovieRowProps) {
             {movies.map((movie) => (
               <CarouselItem
                 key={movie.id}
-                className={`
-                  basis-[40%]
-                  sm:basis-[45%]
-                  md:basis-[33%]
-                  lg:basis-[24%]
-                  xl:basis-[20%]
-                  pl-2
-                `}
+                className={cn(
+                  "basis-[40%] sm:basis-[45%] md:basis-[33%] lg:basis-[24%] xl:basis-[20%] pl-2",
+                )}
               >
                 <MovieCard movie={movie} />
               </CarouselItem>
@@ -57,15 +53,9 @@ export function MovieRow({ title, movies, genreId }: MovieRowProps) {
 
             {genreId && (
               <CarouselItem
-                className="
-                  basis-[40%]
-                  sm:basis-[40%]
-                  md:basis-[30%]
-                  lg:basis-[20%]
-                  xl:basis-[10%]
-                  pl-3
-                  ml-3
-                "
+                className={cn(
+                  "basis-[40%] sm:basis-[40%] md:basis-[30%] lg:basis-[20%] xl:basis-[10%] pl-3 ml-3",
+                )}
               >
                 <Link href={`/genres/${genreId}`} className="group h-45 block">
                   <div className="h-full bg-zinc-900/40 rounded-md border-2 border-dashed border-zinc-800 group-hover:border-red-600 group-hover:bg-zinc-900 transition-all flex flex-col items-center justify-center gap-3">

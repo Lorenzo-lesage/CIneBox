@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import ReactPlayer from "react-player";
+import { cn } from "@/lib/utils";
 
 // Store
 import { useAudioStore } from "@/store/audioStore";
@@ -57,32 +58,26 @@ export function HeroBanner({
     <div className="relative w-full h-[60vh] md:h-[80vh] overflow-hidden">
       {/* Background */}
       <div className="absolute inset-0 z-0">
-        {/* Desktop video */}
-        {trailerKey ? (
-          <>
-            <div className=" w-full h-full border-none">
-              <ReactPlayer
-                src={`https://www.youtube-nocookie.com/watch?v=${trailerKey}`}
-                playing
-                muted={!isActive}
-                loop
-                width="100%"
-                height="100%"
-                className="md:scale-140 scale-250"
-                controls={false}
-              />
-            </div>
-          </>
-        ) : (
-          <Image
-            src={`https://image.tmdb.org/t/p/original${movie.backdrop_path}`}
-            alt={movie.title || movie.name || "Poster"}
-            fill
-            className="object-cover border-none"
-            priority
-            loading="eager"
-            fetchPriority="high"
-            sizes="100vw"
+        <Image
+          src={`https://image.tmdb.org/t/p/original${movie.backdrop_path}`}
+          alt="backdrop"
+          fill
+          className="object-cover transition-opacity duration-500"
+          priority
+          fetchPriority="high"
+        />
+
+        {/* 2. IL VIDEO APPARE SOLO QUANDO IL CLIENT È PRONTO */}
+        {trailerKey && (
+          <ReactPlayer
+            src={`https://www.youtube-nocookie.com/watch?v=${trailerKey}`}
+            playing
+            muted={!isActive}
+            loop
+            width="100%"
+            height="100%"
+            className="md:scale-140 scale-250"
+            controls={false}
           />
         )}
 
@@ -93,23 +88,15 @@ export function HeroBanner({
 
       {/* Content */}
       <div
-        className="
-        relative z-20
-        h-full
-        flex flex-col
-        justify-end md:justify-center
-        px-6 md:px-20
-        pb-10 md:pb-0
-        md:w-1/2
-        space-y-3 md:space-y-4
-      "
+        className={cn(
+          "relative z-20 h-full flex flex-col justify-end md:justify-center px-6 md:px-20 pb-10 md:pb-0 md:w-1/2 space-y-3 md:space-y-4",
+        )}
       >
-
         <Image
-          src={logoImg} 
-          alt="CineBox Logo" 
-          className="w-auto  object-contain" 
-          priority 
+          src={logoImg}
+          alt="CineBox Logo"
+          className="w-auto  object-contain"
+          priority
           style={{
             filter: "drop-shadow(2px 2px 6px rgba(46, 4, 4, 0.87))",
           }}

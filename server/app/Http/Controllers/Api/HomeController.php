@@ -29,9 +29,16 @@ class HomeController extends Controller
 
         $response = [];
 
-        // Meta-dati per la Pagina 1
         if ($page === 1) {
-            $response['hero'] = $this->tmdbService->getMoviesList("trending/{$type}/week");
+            $heroList = $this->tmdbService->getMoviesList("trending/{$type}/week");
+
+            if (is_a($heroList, \Illuminate\Support\Collection::class)) {
+                $response['hero'] = $heroList->shuffle()->values()->all();
+            } else {
+                shuffle($heroList);
+                $response['hero'] = $heroList;
+            }
+
             $response['popular'] = $this->tmdbService->getMoviesList("{$type}/popular");
         }
 

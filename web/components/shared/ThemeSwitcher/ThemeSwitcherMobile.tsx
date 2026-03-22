@@ -1,7 +1,7 @@
 "use client";
 
-// Store
-import { useThemeStore } from "@/store/useThemeStore";
+// Theme
+import { useTheme } from "next-themes";
 
 // Components
 import { ThemeItem } from "./ThemeItem";
@@ -23,8 +23,7 @@ export function ThemeSwitcherMobile() {
   | Data
   |---------------------------------------------------------------------------
   */
-
-  const { theme, setTheme } = useThemeStore();
+  const { theme, setTheme } = useTheme();
 
   /*
   |---------------------------------------------------------------------------
@@ -33,11 +32,7 @@ export function ThemeSwitcherMobile() {
   */
   return (
     <>
-      <Accordion
-        type="single"
-        collapsible
-        className="w-full border-none"
-      >
+      <Accordion type="single" collapsible className="w-full border-none">
         <AccordionItem value="item-1">
           <AccordionTrigger>
             {theme === "system" && (

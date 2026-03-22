@@ -1,36 +1,18 @@
 "use client";
 
-import { useEffect } from "react";
-import { useThemeStore } from "@/store/useThemeStore";
+import * as React from "react";
+import { ThemeProvider as NextThemesProvider } from "next-themes";
 
-export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const { theme } = useThemeStore();
-
-  useEffect(() => {
-    const root = window.document.documentElement;
-    
-    // Funzione per applicare il tema effettivo
-    const applyTheme = (currentTheme: string) => {
-      root.classList.remove("light", "dark");
-      
-      if (currentTheme === "system") {
-        const systemTheme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
-        root.classList.add(systemTheme);
-      } else {
-        root.classList.add(currentTheme);
-      }
-    };
-
-    applyTheme(theme);
-
-    // Gestione cambio tema di sistema in tempo reale
-    if (theme === "system") {
-      const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
-      const handleChange = () => applyTheme("system");
-      mediaQuery.addEventListener("change", handleChange);
-      return () => mediaQuery.removeEventListener("change", handleChange);
-    }
-  }, [theme]);
-
-  return <>{children}</>;
+export function ThemeProvider({ children, ...props }: React.ComponentProps<typeof NextThemesProvider>) {
+  return (
+    <NextThemesProvider 
+      attribute="class" 
+      defaultTheme="system" 
+      enableSystem 
+      disableTransitionOnChange
+      {...props}
+    >
+      {children}
+    </NextThemesProvider>
+  );
 }

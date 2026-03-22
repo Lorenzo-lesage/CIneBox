@@ -39,12 +39,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={cn("font-sans", figtree.variable)}>
+    <html lang="en" className={cn("font-sans", figtree.variable)} suppressHydrationWarning>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <QueryProvider>
-          <ThemeProvider>
+          <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
             <TooltipProvider>{children}</TooltipProvider>
             <Toaster />
           </ThemeProvider>
