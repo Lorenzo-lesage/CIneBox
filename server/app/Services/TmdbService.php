@@ -3,9 +3,9 @@
 namespace App\Services;
 
 use App\Data\MovieData;
+use App\Data\MovieListData;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Cache;
-use Spatie\LaravelData\DataCollection;
 use Illuminate\Http\Request;
 
 class TmdbService
@@ -130,7 +130,9 @@ class TmdbService
             $limitedResults = $results->take(10);
 
             // 3. Trasformiamo solo i 10 selezionati
-            return MovieData::collect($limitedResults, DataCollection::class)->toArray();
+            return $limitedResults
+                ->map(fn(array $movie) => MovieListData::fromTmdb($movie)->toArray())
+                ->toArray();
         });
     }
 

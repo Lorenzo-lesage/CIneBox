@@ -7,6 +7,8 @@ export interface Movie {
   vote_average: number;
   overview: string;
   trailer_url?: string;
+  genres: string[];
+  release_date: string;
 }
 
 export type MediaType = "movie" | "tv";

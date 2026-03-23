@@ -39,7 +39,7 @@ export function MovieRow({ title, movies, genreId }: MovieRowProps) {
 
       <div className="relative">
         <Carousel className="w-full group/row">
-          <CarouselContent className="pt-4 px-4 md:px-10 flex items-center ">
+          <CarouselContent className="pt-4 px-4 md:px-10 flex items-center">
             {movies.map((movie) => (
               <CarouselItem
                 key={movie.id}

@@ -71,7 +71,30 @@ class MovieData extends Data
             ])->toArray();
 
         // --- 5. Genres and keywords ---
-        $genres = collect($data['genres'] ?? [])->map(fn($g) => is_array($g) ? $g['name'] : $g)->toArray();
+        $genreMap = collect(config('tmdb.genres'))
+            ->reduce(function ($carry, $genre) {
+                if (!empty($genre['movie'])) {
+                    $carry[$genre['movie']] = $genre['label'];
+                }
+
+                if (!empty($genre['tv'])) {
+                    $carry[$genre['tv']] = $genre['label'];
+                }
+
+                return $carry;
+            }, []);
+
+        $genres = collect($data['genres'] ?? [])
+            ->map(fn($g) => is_array($g) ? $g['name'] : $g);
+
+        if ($genres->isEmpty() && !empty($data['genre_ids'])) {
+            $genres = collect($data['genre_ids'])
+                ->map(fn($id) => $genreMap[$id] ?? null)
+                ->filter();
+        }
+
+        $genres = $genres->values()->toArray();
+
         $keywords = collect(Arr::get($data, 'keywords.keywords', []))
             ->take(self::MAX_KEYWORDS)
             ->pluck('name')

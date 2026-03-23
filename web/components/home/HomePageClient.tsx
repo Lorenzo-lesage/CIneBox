@@ -3,8 +3,8 @@ import { useEffect, useState, useMemo } from "react";
 import { useInView } from "react-intersection-observer";
 
 // React Query & Services
-import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
-import { fetchHomeData, fetchMovieTrailer } from "@/services/movieService";
+import { useInfiniteQuery } from "@tanstack/react-query";
+import { fetchHomeData } from "@/services/movieService";
 
 // Components
 import { MovieRow } from "@/components/home/MovieRow";
@@ -18,6 +18,8 @@ import { HomePageClientProps } from "@/types/components";
 export default function HomePageClient({
   initialMovieData,
   initialTvData,
+  initialMovieTrailerData,
+  initialTvTrailerData,
 }: HomePageClientProps) {
   /*
   |--------------------------------------------------------------------------
@@ -29,14 +31,15 @@ export default function HomePageClient({
   const { ref, inView } = useInView({ threshold: 0.1 });
   const [openTrailer, setOpenTrailer] = useState(false);
   const serverData = type === "movie" ? initialMovieData : initialTvData;
-  const randomHero = serverData?.hero[0];
+  const currentTrailer =
+    type === "movie" ? initialMovieTrailerData : initialTvTrailerData;
+  const trailerKey = currentTrailer?.trailer_key || null;
 
   /*
   |--------------------------------------------------------------------------
   | Query
   |--------------------------------------------------------------------------
   */
-
 
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
     useInfiniteQuery({
@@ -47,13 +50,6 @@ export default function HomePageClient({
         lastPage.hasMore ? lastPage.nextPage : undefined,
       staleTime: 1000 * 60 * 5,
     });
-
-  const { data: trailerData } = useQuery({
-    queryKey: ["trailer", randomHero?.id],
-    queryFn: () => fetchMovieTrailer(randomHero!.id as number),
-    enabled: !!randomHero?.id,
-    staleTime: 1000 * 60 * 30,
-  });
 
   /*
   |--------------------------------------------------------------------------
@@ -115,19 +111,17 @@ export default function HomePageClient({
   return (
     <main className="min-h-screen pb-20">
       {/* --- Hero Header ---- */}
-      {randomHero && (
-        <HeroBanner
-          movie={randomHero}
-          trailerKey={trailerData?.trailer_key}
-          openTrailer={openTrailer}
-          setOpenTrailer={setOpenTrailer}
-        />
-      )}
+      <HeroBanner
+        movie={serverData.hero[0]}
+        trailerKey={trailerKey}
+        openTrailer={openTrailer}
+        setOpenTrailer={setOpenTrailer}
+      />
 
       {/* --- Trailer Modal --- */}
       {openTrailer && (
         <HeroTrailerModal
-          videoKey={trailerData?.trailer_key || ""}
+          videoKey={trailerKey}
           setOpenTrailer={setOpenTrailer}
         />
       )}
@@ -138,7 +132,7 @@ export default function HomePageClient({
       </div>
 
       {/* --- Movies --- */}
-      <div className="space-y-2 ps-10 md:ps-20 overflow-hidden">
+      <div className="space-y-2 ps-0 md:ps-20">
         {/* Hero List */}
         <MovieRow title="New Releases" movies={processedData?.heroList} />
         {/* Trending */}

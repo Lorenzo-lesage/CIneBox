@@ -106,17 +106,11 @@ export function MovieCard({ movie }: { movie: Movie }) {
 
   return (
     <Card
-      className="h-64 bg-transparent !border-0 !ring-0 group cursor-pointer overflow-visible "
+      className="h-64 bg-transparent !border-0 !ring-0 group cursor-pointer overflow-visible"
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
-      <CardContent
-        className={`p-0 relative w-full h-full transition-all duration-300 md:hover:scale-118 ${
-          showVideo
-            ? "md:scale-118 shadow-2xl z-50 overflow-visible"
-            : "overflow-visible"
-        }`}
-      >
+      <CardContent className="p-0 relative w-full h-full transition-all duration-300 md:hover:scale-130 hover:z-5">
         <MovieCardPlayer
           trailerKey={trailerData?.trailer_key || ""}
           isActive={isActive}

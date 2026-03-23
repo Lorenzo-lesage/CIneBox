@@ -58,7 +58,7 @@ services:
     ports:
       - "3000:3000"
     environment:
-    - NEXT_PUBLIC_API_URL=http://server:8000
+      - INTERNAL_API_URL=http://server:8000/api/v1
 
     # --- VERSIONE OFFLINE (Sviluppo - Attiva) ---
     # Utilizza l'immagine base per permettere l'Hot Reload (modifiche istantanee)

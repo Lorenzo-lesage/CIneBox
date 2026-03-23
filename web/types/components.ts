@@ -6,12 +6,14 @@ export interface HomeDataResponse {
   hasMore: boolean;
   nextPage: number | null;
   // Index Signature: permette di avere chiavi dinamiche come 'action', 'comedy', ecc.
-  [key: string]: any | GenreData | Movie[] | boolean | number | null;
+  [key: string]: any | Movie[] | boolean | number | null;
 }
 
 export interface HomePageClientProps {
   initialMovieData: HomeDataResponse;
   initialTvData: HomeDataResponse;
+  initialMovieTrailerData: { trailer_key: string | null};
+  initialTvTrailerData: { trailer_key: string | null };
 }
 
 export interface HeroBannerProps {
@@ -22,13 +24,13 @@ export interface HeroBannerProps {
     backdrop_path?: string;
     overview?: string;
   };
-  trailerKey?: string;
+  trailerKey: string | null;
   openTrailer: boolean;
   setOpenTrailer: (open: boolean) => void;
 }
 
 export interface HeroTrailerModalProps {
-  videoKey: string;
+  videoKey: string | null;
   setOpenTrailer: (open: boolean) => void;
 }
 
