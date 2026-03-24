@@ -57,7 +57,7 @@ export interface MovieRowProps {
   title: string;
   movies: Movie[];
   genreId?: string | number;
-  scope?: "movie" | "top-rated";
+  rowStyle?: "default" | "bigger";
 }
 
 export interface MovieCardControlsProps {
@@ -68,7 +68,7 @@ export interface MovieCardControlsProps {
 
 export interface MovieCardProps {
   movie: Movie;
-  scope?: "movie" | "top-rated";
+  rowStyle?: "default" | "bigger";
 }
 
 export interface MovieCardPlayerProps {
@@ -78,7 +78,7 @@ export interface MovieCardPlayerProps {
   isActive: boolean;
   toggleActive: () => void;
   playerRef: React.RefObject<HTMLVideoElement | null>;
-  scope?: "movie" | "top-rated";
+  rowStyle?: "default" | "bigger";
 }
 
 export interface MovieCardTextProps {
@@ -90,4 +90,8 @@ export interface ThemeItemProps {
   onClick: () => void;
   icon: React.ReactNode;
   label: string;
+}
+
+export interface FeaturedMovie {
+  featuredMovie: Movie;
 }

@@ -10,7 +10,7 @@ export interface Movie {
   genres: string[];
   release_date: string;
   popularity: number;
-  scope: "movie" | "top-rated";
+  rowStyle: "default" | "bigger";
 }
 
 export type MediaType = "movie" | "tv";

@@ -10,7 +10,7 @@ import { fetchHomeData } from "@/services/movieService";
 import { HeroBanner } from "@/components/home/HeroBanner";
 import { Switcher } from "@/components/shared/Switcher";
 import { HeroTrailerModal } from "@/components/home/HeroTrailerModal";
-import { List } from "@/components/home/List";
+import { List } from "@/components/home/listComponents/List";
 
 // Types
 import { HomePageClientProps } from "@/types/components";

@@ -2,7 +2,7 @@ import Link from "next/link";
 import { cn } from "@/lib/utils";
 
 // Components
-import { MovieCard } from "../shared/Card/MovieCard";
+import { MovieCard } from "@/components/shared/Card/MovieCard";
 
 // UI
 import {
@@ -23,7 +23,7 @@ export function MovieRow({
   title,
   movies,
   genreId,
-  scope = "movie",
+  rowStyle = "default",
 }: MovieRowProps) {
   /*
   
@@ -52,7 +52,7 @@ export function MovieRow({
                   "basis-[40%] sm:basis-[45%] md:basis-[33%] lg:basis-[24%] xl:basis-[20%] pl-2",
                 )}
               >
-                <MovieCard movie={movie} scope={scope} />
+                <MovieCard movie={movie} rowStyle={rowStyle} />
               </CarouselItem>
             ))}
 

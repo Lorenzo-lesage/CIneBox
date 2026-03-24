@@ -20,7 +20,7 @@ export function MovieCardPlayer({
   isActive,
   toggleActive,
   playerRef,
-  scope = "movie",
+  rowStyle = "default",
 }: MovieCardPlayerProps) {
   /*
   |--------------------------------------------------------------------------
@@ -42,16 +42,16 @@ export function MovieCardPlayer({
       <div
         className={cn(
           "relative w-full h-50 group",
-          scope === "top-rated" && "h-86",
+          rowStyle === "bigger" && "h-86",
         )}
       >
         <MovieImage
-          src={`https://image.tmdb.org/t/p/w780${isMobile || scope === "top-rated" ? movie.poster_path : movie.backdrop_path || movie.poster_path}`}
+          src={`https://image.tmdb.org/t/p/w780${isMobile || rowStyle === "bigger" ? movie.poster_path : movie.backdrop_path || movie.poster_path}`}
           alt={movie.title || movie.name || "Poster"}
           className={cn(
             "object-cover transition-opacity duration-500 z-10 w-full", // Aggiunto w-full
             showVideo && !isMobile ? "opacity-0" : "opacity-100",
-            scope === "top-rated"
+            rowStyle === "bigger"
               ? "h-86 md:h-86 aspect-[2/3] object-cover"
               : "h-full object-cover",
           )}

@@ -13,9 +13,6 @@ import { Button } from "@/components/ui/button";
 // Icons
 import { Volume2, VolumeOff, Expand } from "lucide-react";
 
-// Logo
-import logoImg from "@/public/images/CineBox.png";
-
 // Types
 import { HeroBannerProps } from "@/types/components";
 
@@ -92,16 +89,6 @@ export function HeroBanner({
           "relative z-20 h-full flex flex-col justify-end md:justify-center px-6 md:px-20 pb-10 md:pb-0 md:w-1/2 space-y-3 md:space-y-4",
         )}
       >
-        <Image
-          src={logoImg}
-          alt="CineBox Logo"
-          className="w-auto  object-contain"
-          priority
-          style={{
-            filter: "drop-shadow(2px 2px 6px rgba(46, 4, 4, 0.87))",
-          }}
-        />
-
         <h1 className="text-xl md:text-5xl font-bold drop-shadow-lg hidden md:block">
           {movie.title || movie.name}
         </h1>

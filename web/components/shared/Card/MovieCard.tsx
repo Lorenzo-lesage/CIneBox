@@ -24,7 +24,7 @@ import { Card, CardContent } from "@/components/ui/card";
 // Types
 import { MovieCardProps } from "@/types/components";
 
-export function MovieCard({ movie, scope = "movie" }: MovieCardProps) {
+export function MovieCard({ movie, rowStyle = "default" }: MovieCardProps) {
   /*
   |--------------------------------------------------------------------------
   | Data
@@ -109,12 +109,15 @@ export function MovieCard({ movie, scope = "movie" }: MovieCardProps) {
     <Card
       className={cn(
         "h-64 bg-transparent !border-0 !ring-0 group cursor-pointer overflow-visible",
-        scope === "top-rated" && "h-100",
+        rowStyle === "bigger" && "h-100",
       )}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
-      <CardContent className="p-0 relative w-full h-full transition-all duration-300 md:hover:scale-130 hover:z-5">
+      <CardContent className={cn(
+        "p-0 relative w-full h-full transition-all duration-300 md:hover:scale-130 hover:z-5",
+        rowStyle === "bigger" && "md:hover:scale-110",
+      )}>
         <MovieCardPlayer
           trailerKey={trailerData?.trailer_key || ""}
           isActive={isActive}
@@ -122,7 +125,7 @@ export function MovieCard({ movie, scope = "movie" }: MovieCardProps) {
           movie={movie}
           showVideo={showVideo}
           playerRef={playerRef}
-          scope={scope}
+          rowStyle={rowStyle}
         />
 
         {/* --- Content Card --- */}
