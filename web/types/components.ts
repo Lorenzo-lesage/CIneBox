@@ -16,6 +16,25 @@ export interface HomePageClientProps {
   initialTvTrailerData: { trailer_key: string | null };
 }
 
+export interface HomeGenreSection {
+  key: string;
+  genreId: string | number;
+  label: string;
+  data: Movie[];
+}
+
+export interface ProcessedHomeData {
+  heroList: Movie[];
+  popularList: Movie[];
+  topRatedList: Movie[];
+  genres: HomeGenreSection[];
+}
+
+export interface HomeListProps {
+  processedData: ProcessedHomeData;
+  isFetchingNextPage: boolean;
+}
+
 export interface HeroBannerProps {
   movie: {
     id: string | number;
@@ -38,12 +57,18 @@ export interface MovieRowProps {
   title: string;
   movies: Movie[];
   genreId?: string | number;
+  scope?: "movie" | "top-rated";
 }
 
 export interface MovieCardControlsProps {
   isFavorited: boolean;
   toggleFavorite: () => void;
   movie: Movie;
+}
+
+export interface MovieCardProps {
+  movie: Movie;
+  scope?: "movie" | "top-rated";
 }
 
 export interface MovieCardPlayerProps {
@@ -53,10 +78,11 @@ export interface MovieCardPlayerProps {
   isActive: boolean;
   toggleActive: () => void;
   playerRef: React.RefObject<HTMLVideoElement | null>;
+  scope?: "movie" | "top-rated";
 }
 
 export interface MovieCardTextProps {
-  movie: Pick<Movie, "title" | "name" | "vote_average">;
+  movie: Pick<Movie, "title" | "name" | "vote_average" | "popularity">;
 }
 
 export interface ThemeItemProps {

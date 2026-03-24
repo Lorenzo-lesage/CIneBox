@@ -40,6 +40,21 @@ class HomeController extends Controller
             }
 
             $response['popular'] = $this->tmdbService->getMoviesList("{$type}/popular");
+
+            $response['top_rated'] = $this->tmdbService->getMoviesList("{$type}/top_rated");
+
+
+            // $response['top_rated'] = [
+            //     'label' => 'Top Rated',
+            //     'data'  => $this->tmdbService->getMoviesList("{$type}/top_rated")
+            // ];
+
+
+            $upcomingEndpoint = ($type === 'movie') ? 'movie/upcoming' : 'tv/on_the_air';
+            $response['upcoming'] = [
+                'label' => ($type === 'movie') ? 'Up coming' : 'On the air',
+                'data'  => $this->tmdbService->getMoviesList($upcomingEndpoint, ['region' => 'IT'])
+            ];
         }
 
         // Carichiamo i 5 generi della pagina corrente

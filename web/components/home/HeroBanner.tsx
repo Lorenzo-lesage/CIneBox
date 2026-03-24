@@ -77,7 +77,7 @@ export function HeroBanner({
             width="100%"
             height="100%"
             className="md:scale-140 scale-250"
-            controls={true}
+            controls={false}
           />
         )}
 

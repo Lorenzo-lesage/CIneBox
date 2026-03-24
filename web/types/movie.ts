@@ -9,6 +9,8 @@ export interface Movie {
   trailer_url?: string;
   genres: string[];
   release_date: string;
+  popularity: number;
+  scope: "movie" | "top-rated";
 }
 
 export type MediaType = "movie" | "tv";

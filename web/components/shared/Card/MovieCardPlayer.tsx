@@ -1,4 +1,5 @@
 import ReactPlayer from "react-player";
+import { cn } from "@/lib/utils";
 
 // Hooks
 import { useIsMobile } from "@/hooks/useIsMobile";
@@ -19,6 +20,7 @@ export function MovieCardPlayer({
   isActive,
   toggleActive,
   playerRef,
+  scope = "movie",
 }: MovieCardPlayerProps) {
   /*
   |--------------------------------------------------------------------------
@@ -37,13 +39,22 @@ export function MovieCardPlayer({
   return (
     <div>
       {/* Poster */}
-      <div className="relative w-full h-50 group">
+      <div
+        className={cn(
+          "relative w-full h-50 group",
+          scope === "top-rated" && "h-86",
+        )}
+      >
         <MovieImage
-          src={`https://image.tmdb.org/t/p/w780${isMobile ? movie.poster_path : movie.backdrop_path || movie.poster_path}`}
+          src={`https://image.tmdb.org/t/p/w780${isMobile || scope === "top-rated" ? movie.poster_path : movie.backdrop_path || movie.poster_path}`}
           alt={movie.title || movie.name || "Poster"}
-          className={`object-cover transition-opacity duration-500 h-full z-10 ${
-            showVideo && !isMobile ? "opacity-0" : "opacity-100"
-          }`}
+          className={cn(
+            "object-cover transition-opacity duration-500 z-10 w-full", // Aggiunto w-full
+            showVideo && !isMobile ? "opacity-0" : "opacity-100",
+            scope === "top-rated"
+              ? "h-86 md:h-86 aspect-[2/3] object-cover"
+              : "h-full object-cover",
+          )}
         />
         {/* Overlay gradient */}
         <div className="absolute -bottom-1 inset-0 bg-gradient-to-t from-background via-transparent to-transparent pointer-events-none" />
@@ -75,7 +86,9 @@ export function MovieCardPlayer({
           <p className="text-primary truncate">
             {movie.genres.map((genre) => genre).join(" - ")}
           </p>
-          <p className="text-primary text-xs italic text-center">{movie.release_date}</p>
+          <p className="text-primary text-xs italic text-center">
+            {movie.release_date}
+          </p>
         </div>
       </div>
     </div>

@@ -17,6 +17,7 @@ class MovieListData extends Data
         public ?string $release_date,
         public float $community_rating = 0,
         public bool $is_favorite = false,
+        public float $popularity = 0
     ) {}
 
     public static function fromTmdb(array $data): self
@@ -52,6 +53,8 @@ class MovieListData extends Data
             genres: $genres->values()->toArray(),
             vote_average: (float) ($data['vote_average'] ?? 0),
             release_date: $data['release_date'] ?? $data['first_air_date'] ?? null,
+            community_rating: (float) ($data['community_rating'] ?? 0),
+            popularity: (float) ($data['popularity'] ?? 0),
         );
     }
 }

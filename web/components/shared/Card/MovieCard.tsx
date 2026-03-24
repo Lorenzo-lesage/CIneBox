@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { cn } from "@/lib/utils";
 
 // Custom Hooks
 import { useMute } from "@/hooks/useMute";
@@ -21,9 +22,9 @@ import { MovieCardText } from "./MovieCardText";
 import { Card, CardContent } from "@/components/ui/card";
 
 // Types
-import { Movie } from "@/types/movie";
+import { MovieCardProps } from "@/types/components";
 
-export function MovieCard({ movie }: { movie: Movie }) {
+export function MovieCard({ movie, scope = "movie" }: MovieCardProps) {
   /*
   |--------------------------------------------------------------------------
   | Data
@@ -106,7 +107,10 @@ export function MovieCard({ movie }: { movie: Movie }) {
 
   return (
     <Card
-      className="h-64 bg-transparent !border-0 !ring-0 group cursor-pointer overflow-visible"
+      className={cn(
+        "h-64 bg-transparent !border-0 !ring-0 group cursor-pointer overflow-visible",
+        scope === "top-rated" && "h-100",
+      )}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
@@ -118,6 +122,7 @@ export function MovieCard({ movie }: { movie: Movie }) {
           movie={movie}
           showVideo={showVideo}
           playerRef={playerRef}
+          scope={scope}
         />
 
         {/* --- Content Card --- */}

@@ -19,7 +19,12 @@ import { ChevronRight } from "lucide-react";
 // Types
 import { MovieRowProps } from "@/types/components";
 
-export function MovieRow({ title, movies, genreId }: MovieRowProps) {
+export function MovieRow({
+  title,
+  movies,
+  genreId,
+  scope = "movie",
+}: MovieRowProps) {
   /*
   
   |--------------------------------------------------------------------------
@@ -47,7 +52,7 @@ export function MovieRow({ title, movies, genreId }: MovieRowProps) {
                   "basis-[40%] sm:basis-[45%] md:basis-[33%] lg:basis-[24%] xl:basis-[20%] pl-2",
                 )}
               >
-                <MovieCard movie={movie} />
+                <MovieCard movie={movie} scope={scope} />
               </CarouselItem>
             ))}
 

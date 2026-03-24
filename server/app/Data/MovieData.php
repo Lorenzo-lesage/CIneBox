@@ -31,8 +31,20 @@ class MovieData extends Data
         public ?string $certification = null,
         public array $keywords = [],
         public array $watch_providers = [],
+        public ?int $runtime,
+        public ?string $tagline,
+        public ?string $status,
+        public ?int $budget,
+        public ?int $revenue,
+        public ?string $homepage,
+        public ?string $imdb_url,
+        public array $production_companies = [],
+        public array $production_countries = [],
+        public array $spoken_languages = [],
+        public ?string $collection_name = null,
 
         // Custom fields
+        public bool $is_upcoming = false,
         public float $community_rating = 0,
         public bool $is_favorite = false,
     ) {}
@@ -107,6 +119,29 @@ class MovieData extends Data
                 'logo' => $p['logo_path'],
             ])->toArray();
 
+        // --- Case di produzione con loghi ---
+        $productionCompanies = collect(Arr::get($data, 'production_companies', []))
+            ->map(fn($p) => [
+                'name' => $p['name'],
+                'logo' => $p['logo_path'] ? "https://image.tmdb.org/t/p/w200" . $p['logo_path'] : null,
+            ])->toArray();
+
+        // --- Paesi e Lingue ---
+        $countries = collect(Arr::get($data, 'production_countries', []))->pluck('name')->toArray();
+        $languages = collect(Arr::get($data, 'spoken_languages', []))->pluck('english_name')->toArray();
+
+        // --- Link IMDb ---
+        $imdbId = $data['imdb_id'] ?? null;
+        $imdbUrl = $imdbId ? "https://www.imdb.com/title/{$imdbId}" : null;
+
+        // --- Saga/Collection ---
+        $collectionName = data_get($data, 'belongs_to_collection.name');
+
+        $releaseDate = $data['release_date'] ?? $data['first_air_date'] ?? null;
+
+        $isUpcoming = ($data['status'] !== 'Released') ||
+                  ($releaseDate && strtotime($releaseDate) > time());
+
         // --- 7. Return structured MovieData object ---
         return new self(
             id: $data['id'],
@@ -125,6 +160,18 @@ class MovieData extends Data
             certification: $certification,
             keywords: $keywords,
             watch_providers: $watchProviders,
+            runtime: $data['runtime'] ?? null,
+            tagline: $data['tagline'] ?? null,
+            status: $data['status'] ?? null,
+            budget: $data['budget'] ?? 0,
+            revenue: $data['revenue'] ?? 0,
+            homepage: $data['homepage'] ?? null,
+            imdb_url: $imdbUrl,
+            production_companies: $productionCompanies,
+            production_countries: $countries,
+            spoken_languages: $languages,
+            collection_name: $collectionName,
+            is_upcoming: $isUpcoming,
         );
     }
 
