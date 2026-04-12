@@ -11,7 +11,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        $this->app->singleton(\App\Services\TmdbServiceInterface::class, function ($app) {
+            $baseService = new \App\Services\TmdbService();
+            return new \App\Services\CachingTmdbService($baseService);
+        });
     }
 
     /**

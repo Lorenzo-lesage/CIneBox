@@ -20,21 +20,24 @@ Il progetto utilizza Docker Compose per gestire tutti i servizi necessari:
 ## Come avviare il progetto
 
 1. **Clona il repository** (se non l'hai già fatto):
+
    ```bash
    git clone <repository-url>
    cd CineBox
    ```
 
 2. **Avvia tutti i servizi con Docker Compose**:
+
    ```bash
-   docker-compose up -d
+   docker compose up -d
    ```
 
 3. **Attendi il completamento del build** (la prima volta può richiedere alcuni minuti).
 
 4. **Verifica che i servizi siano attivi**:
+
    ```bash
-   docker-compose ps
+   docker compose ps
    ```
 
 5. **Accedi alle applicazioni**:
@@ -66,28 +69,32 @@ CineBox/
 ## Comandi utili
 
 - **Avvia i servizi**:
+
   ```bash
-  docker-compose up -d
+  docker compose up -d
   ```
 
 - **Ferma i servizi**:
+
   ```bash
-  docker-compose down
+  docker compose down
   ```
 
 - **Visualizza i log**:
+
   ```bash
-  docker-compose logs -f [servizio]
+  docker compose logs -f [servizio]
   ```
 
 - **Entra nel container del server**:
+
   ```bash
-  docker-compose exec server bash
+  docker compose exec server bash
   ```
 
 - **Entra nel container del frontend**:
   ```bash
-  docker-compose exec web bash
+  docker compose exec web bash
   ```
 
 ## Configurazione iniziale
@@ -95,23 +102,37 @@ CineBox/
 Dopo il primo avvio, potrebbe essere necessario eseguire alcuni comandi di inizializzazione:
 
 1. **Installa le dipendenze PHP nel container del server**:
+
    ```bash
-   docker-compose exec server composer install
+   docker compose exec server composer install
    ```
 
 2. **Genera la chiave dell'applicazione Laravel**:
+
    ```bash
-   docker-compose exec server php artisan key:generate
+   docker compose exec server php artisan key:generate
    ```
 
 3. **Esegui le migrazioni del database**:
+
    ```bash
-   docker-compose exec server php artisan migrate
+   docker compose exec server php artisan migrate
    ```
 
 4. **Installa le dipendenze Node.js nel container del frontend**:
+
    ```bash
-   docker-compose exec web npm install
+   docker compose exec web npm install
+   ```
+
+4. **Comando se ho errore di permessi in php**:
+   ```bash
+      #!/bin/bash
+   cd /opt/stacks/cinebox/server
+   sudo chown -R lorenzo:lorenzo .
+   sudo chmod -R 775 storage bootstrap/cache
+   sudo chmod 644 .env
+   echo "Permessi sistemati, apri VS Code ora."
    ```
 
 ## Troubleshooting
