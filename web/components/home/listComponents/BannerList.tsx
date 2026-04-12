@@ -10,7 +10,7 @@ export function BannerList({ featuredMovie }: FeaturedMovie) {
       <Image
         alt={featuredMovie.title || featuredMovie.name || "Featured movie"}
         src={`https://image.tmdb.org/t/p/original${featuredMovie.backdrop_path}`}
-        className="h-full w-full rounded-xl object-cover opacity-50"
+        className="h-full w-full object-cover opacity-50"
         fill
       />
       <div className="absolute bottom-10 left-10 z-20 max-w-md">

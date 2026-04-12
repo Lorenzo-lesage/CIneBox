@@ -4,12 +4,12 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Services\TmdbService;
+use App\Services\TmdbServiceInterface;
 
 class GenreController extends Controller
 {
     public function __construct(
-        protected TmdbService $tmdbService
+        protected TmdbServiceInterface $tmdbService
     ) {}
 
     /**
@@ -42,7 +42,7 @@ class GenreController extends Controller
     {
         $type = $request->query('type', 'movie');
         $page = $request->input('page', 1);
-        $sortBy = $this->tmdbService->getSortBy($request);
+        $sortBy = $this->tmdbService->getSortValue($request->input('sort_by', 'popular'));
 
         $endpoint = "discover/{$type}";
 

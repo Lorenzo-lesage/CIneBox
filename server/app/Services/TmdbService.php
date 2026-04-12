@@ -4,11 +4,10 @@ namespace App\Services;
 
 use App\Data\MovieData;
 use App\Data\MovieListData;
+use App\Exceptions\TmdbApiException;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Http\Request;
 
-class TmdbService
+class TmdbService implements TmdbServiceInterface
 {
     protected string $token;
     protected string $baseUrl;
@@ -27,19 +26,18 @@ class TmdbService
         'watch_providers',
     ];
 
-    public function __construct()
+    public function __construct(?string $token = null, ?string $baseUrl = null)
     {
-        $this->token = config('services.tmdb.token');
-        $this->baseUrl = config('services.tmdb.base_url');
+        $this->token = $token ?? config('services.tmdb.token');
+        $this->baseUrl = $baseUrl ?? config('services.tmdb.base_url');
     }
 
     /**
-     * Summary of getSortBy
-     * Sorting function
-     * @param Request $request
+     * Get the sort value based on the provided key
+     * @param string $sortKey
      * @return string
      */
-    public function getSortBy(Request $request): string
+    public function getSortValue(string $sortKey): string
     {
         $allowedSorts = [
             'popular'     => 'popularity.desc',
@@ -51,112 +49,86 @@ class TmdbService
             'title_za'    => 'title.desc',
         ];
 
-        $sortKey = $request->input('sort_by', 'popular');
-
         return $allowedSorts[$sortKey] ?? $allowedSorts['popular'];
     }
 
     /**
-     * Return a movie from TMDB
+     * Get a movie from TMDB
+     * Summary of getMovie
+     * @see https://developers.themoviedb.org/3/movies/get-movie-details
+     * @param int $tmdbId
+     * @param string $lang
+     * @return MovieData
      */
     public function getMovie(int $tmdbId, string $lang = 'en-US'): MovieData
     {
-        $key = "movie_{$tmdbId}_{$lang}";
-        $cache = Cache::tags(['movies']);
+        $appendToResponse = implode(',', self::MOVIE_APPEND);
 
-        if ($cached = $cache->get($key)) {
-            return $cached;
-        }
+        $response = $this->request('GET', "/movie/{$tmdbId}", [
+            'language' => $lang,
+            'append_to_response' => $appendToResponse
+        ]);
 
-        return Cache::lock("lock_{$key}", 10)->block(5, function () use ($tmdbId, $lang, $key, $cache) {
-
-            $appendToResponse = implode(',', self::MOVIE_APPEND);
-
-            if ($cached = $cache->get($key)) {
-                return $cached;
-            }
-
-            $response = Http::withToken($this->token)
-                ->timeout(self::TIMEOUT)
-                ->retry(self::RETRY_ATTEMPTS, self::RETRY_DELAY)
-                ->get("{$this->baseUrl}/movie/{$tmdbId}", [
-                    'language' => $lang,
-                    'append_to_response' =>  $appendToResponse
-                ]);
-
-            if (!$response->successful()) {
-                abort(404, "Movie not found in TMDB");
-            }
-
-            $movie = MovieData::fromTmdb($response->json());
-
-            $cache->put($key, $movie, now()->addDay());
-
-            return $movie;
-        });
+        return MovieData::fromTmdb($response->json());
     }
 
     /**
+     * Get a list of movies from TMDB
      * Summary of getMoviesList
+     * @see https://developers.themoviedb.org/3/discover/movie-discover
      * @param string $endpoint
      * @param array $params
      * @param int $page
      * @param string $lang
+     * @param string $sortBy
      * @return array
      */
     public function getMoviesList(string $endpoint, array $params = [], int $page = 1, string $lang = 'en-US', string $sortBy = 'popularity.desc'): array
     {
-        // Creiamo una chiave cache che includa anche la pagina
-        $cacheKey = "list_" . md5($endpoint . serialize($params) . $page . $lang . $sortBy);
+        $response = $this->request('GET', "/{$endpoint}", array_merge([
+            'language' => $lang,
+            'page' => $page,
+            'sort_by' => $sortBy,
+        ], $params));
 
-        return Cache::tags(['movies', 'lists'])->remember($cacheKey, now()->addHours(6), function () use ($endpoint, $lang, $params, $page, $sortBy) {
-            $response = Http::withToken($this->token)
-                ->timeout(self::TIMEOUT)
-                ->retry(self::RETRY_ATTEMPTS, self::RETRY_DELAY)
-                ->get("{$this->baseUrl}/{$endpoint}", array_merge([
-                    'language' => $lang,
-                    'page' => $page,
-                    'sort_by' => $sortBy,
-                ], $params));
+        $results = collect($response->json('results'));
 
-            if (!$response->successful()) {
-                abort(404, "Movie not found in TMDB");
-            }
-
-            // 1. Prendiamo i risultati (che TMDB manda sempre a 20)
-            $results = collect($response->json('results'));
-
-            // 2. Ne teniamo solo 10
-            $limitedResults = $results->take(10);
-
-            // 3. Trasformiamo solo i 10 selezionati
-            return $limitedResults
-                ->map(fn(array $movie) => MovieListData::fromTmdb($movie)->toArray())
-                ->toArray();
-        });
+        return $results->take(10)
+            ->map(fn(array $movie) => MovieListData::fromTmdb($movie)->toArray())
+            ->toArray();
     }
 
-
     /**
+     * Get a movie trailer from TMDB
      * Summary of getMovieTrailer
-     * Method to take trailer
+     * @see https://developers.themoviedb.org/3/movies/get-movie-videos
      * @param int $tmdbId
+     * @return string|null
      */
     public function getMovieTrailer(int $tmdbId): ?string
     {
-        $key = "movie_trailer_{$tmdbId}";
+        $response = $this->request('GET', "/movie/{$tmdbId}/videos");
 
-        return Cache::remember($key, now()->addWeek(), function () use ($tmdbId) {
-            $response = Http::withToken($this->token)
-                ->get("{$this->baseUrl}/movie/{$tmdbId}/videos");
+        return collect($response->json('results'))
+            ->where('site', 'YouTube')
+            ->where('type', 'Trailer')
+            ->first()['key'] ?? null;
+    }
 
-            if ($response->successful()) {
-                return collect($response->json('results'))
-                    ->where('site', 'YouTube')
-                    ->where('type', 'Trailer')
-                    ->first()['key'] ?? null;
-            }
-            return null;
-        });
+    /**
+     * Centralized request method to handle auth, timeouts, and retries.
+     */
+    protected function request(string $method, string $endpoint, array $query = [])
+    {
+        $response = Http::withToken($this->token)
+            ->timeout(self::TIMEOUT)
+            ->retry(self::RETRY_ATTEMPTS, self::RETRY_DELAY)
+            ->{$method}($this->baseUrl . $endpoint, $query);
+
+        if (!$response->successful()) {
+            throw new TmdbApiException("TMDB API Error: " . $response->status() . " - " . $response->body());
+        }
+
+        return $response;
     }
 }

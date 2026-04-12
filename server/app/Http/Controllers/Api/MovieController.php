@@ -5,11 +5,11 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Movie;
 use Illuminate\Http\Request;
-use App\Services\TmdbService;
+use App\Services\TmdbServiceInterface;
 
 class MovieController extends Controller
 {
-    public function __construct(protected \App\Services\TmdbService $tmdbService) {}
+    public function __construct(protected TmdbServiceInterface $tmdbService) {}
 
     /**
      * Display a listing of the resource.
@@ -18,7 +18,7 @@ class MovieController extends Controller
     {
         $type = $request->input('type', 'movie');
         $page = $request->input('page', 1);
-        $sortBy = $this->tmdbService->getSortBy($request);
+        $sortBy = $this->tmdbService->getSortValue($request->input('sort_by', 'popular'));
 
         $endpoint = ($type === 'tv') ? 'discover/tv' : 'discover/movie';
 
@@ -70,10 +70,10 @@ class MovieController extends Controller
     /**
      * Summary of trailer
      * @param int $id
-     * @param TmdbService $tmdbService
+     * @param TmdbServiceInterface $tmdbService
      * @return \Illuminate\Http\JsonResponse
      */
-    public function trailer(int $id, TmdbService $tmdbService)
+    public function trailer(int $id, TmdbServiceInterface $tmdbService)
     {
         $trailerKey = $tmdbService->getMovieTrailer($id);
 

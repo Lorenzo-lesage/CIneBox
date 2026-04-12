@@ -4,12 +4,13 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Services\TmdbServiceInterface;
 
 class HomeController extends Controller
 {
 
     public function __construct(
-        protected \App\Services\TmdbService $tmdbService
+        protected TmdbServiceInterface $tmdbService
     ) {}
 
     /**
@@ -32,7 +33,7 @@ class HomeController extends Controller
         if ($page === 1) {
             $heroList = $this->tmdbService->getMoviesList("trending/{$type}/week");
 
-            if (is_a($heroList, \Illuminate\Support\Collection::class)) {
+            if ($heroList instanceof \Illuminate\Support\Collection) {
                 $response['hero'] = $heroList->shuffle()->values()->all();
             } else {
                 shuffle($heroList);
