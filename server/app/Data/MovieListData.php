@@ -2,59 +2,56 @@
 
 namespace App\Data;
 
+use App\Data\Traits\HasTmdbGenres;
 use Spatie\LaravelData\Data;
 
 class MovieListData extends Data
 {
+    use HasTmdbGenres;
+
     public function __construct(
-        public int $id,
-        public string $title,
-        public ?string $overview,
-        public ?string $poster_path,
-        public ?string $backdrop_path,
-        public array $genres = [],
-        public float $vote_average,
-        public ?string $release_date,
-        public float $community_rating = 0,
-        public bool $is_favorite = false,
-        public float $popularity = 0
+        public readonly int $id,
+        public readonly string $title,
+        public readonly ?string $overview,
+        public readonly ?string $poster_path,
+        public readonly ?string $backdrop_path,
+        public readonly array $genres = [],
+        public readonly float $vote_average,
+        public readonly ?string $release_date,
+        public readonly float $community_rating = 0,
+        public readonly bool $is_favorite = false,
+        public readonly float $popularity = 0
     ) {}
 
+    /**
+     * Transform raw TMDB list data into a clean MovieListData object.
+     */
     public static function fromTmdb(array $data): self
     {
-        $genreMap = collect(config('tmdb.genres'))
-            ->reduce(function ($carry, $genre) {
-                if (!empty($genre['movie'])) {
-                    $carry[$genre['movie']] = $genre['label'];
-                }
-
-                if (!empty($genre['tv'])) {
-                    $carry[$genre['tv']] = $genre['label'];
-                }
-
-                return $carry;
-            }, []);
-
-        $genres = collect($data['genres'] ?? [])
-            ->map(fn($g) => is_array($g) ? $g['name'] : $g);
-
-        if ($genres->isEmpty() && !empty($data['genre_ids'])) {
-            $genres = collect($data['genre_ids'])
-                ->map(fn($id) => $genreMap[$id] ?? null)
-                ->filter();
-        }
-
-        return new self(
+        // Step 1: Create initial instance to trigger trait usage
+        $instance = new self(
             id: $data['id'],
             title: $data['title'] ?? $data['name'] ?? 'Untitled',
             overview: $data['overview'] ?? null,
             poster_path: $data['poster_path'] ?? null,
             backdrop_path: $data['backdrop_path'] ?? null,
-            genres: $genres->values()->toArray(),
+            genres: [], // Temporary, filled below
             vote_average: (float) ($data['vote_average'] ?? 0),
             release_date: $data['release_date'] ?? $data['first_air_date'] ?? null,
             community_rating: (float) ($data['community_rating'] ?? 0),
             popularity: (float) ($data['popularity'] ?? 0),
+        );
+
+        // Step 2: Map genres using the Trait method
+        $genres = $instance->mapTmdbGenres(
+            $data['genres'] ?? [],
+            $data['genre_ids'] ?? []
+        );
+
+        // Step 3: Return final immutable instance
+        return new self(
+            ...$instance->toArray(),
+            genres: $genres
         );
     }
 }
