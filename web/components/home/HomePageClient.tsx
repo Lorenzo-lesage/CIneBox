@@ -136,7 +136,7 @@ export default function HomePageClient({
       </div>
 
       {/* --- Movies --- */}
-      <List processedData={processedData} isFetchingNextPage={isFetchingNextPage} />
+      <List processedData={processedData} isFetchingNextPage={isFetchingNextPage} type={type} />
     </main>
   );
 }

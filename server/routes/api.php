@@ -40,7 +40,7 @@ Route::prefix('v1')->group(function () {
     });
 
     // Movie trailer
-    Route::get('/movies/{id}/trailer', [MovieController::class, 'trailer'])->name('movies.trailer');
+    Route::get('/{type}/{id}/trailer', [MovieController::class, 'trailer'])->name('movies.trailer');
 
 
     /*

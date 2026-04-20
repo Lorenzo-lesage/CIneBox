@@ -47,10 +47,11 @@ class GenreController extends Controller
         $endpoint = "discover/{$type}";
 
         return response()->json(
-            $this->tmdbService->getMoviesList(
+            $this->tmdbService->getMediaList(
                 $endpoint,
                 ['with_genres' => $genreId],
                 (int) $page,
+                'en-US',
                 $sortBy
             )
         );

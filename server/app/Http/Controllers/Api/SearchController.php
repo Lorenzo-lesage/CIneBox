@@ -19,7 +19,7 @@ class SearchController extends Controller
             'page' => 'integer|min:1'
         ]);
 
-        return $this->tmdbService->getMoviesList(
+        return $this->tmdbService->getMediaList(
             'search/movie',
             ['query' => $request->input('q')],
             $request->input('page', 1)

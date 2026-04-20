@@ -1,4 +1,4 @@
-import { fetchMovieTrailer } from "@/services/movieService";
+import { fetchMediaTrailer } from "@/services/movieService";
 
 export async function getHeroTrailers(movieId?: number, tvId?: number) {
   let movieTrailer = null;
@@ -6,7 +6,7 @@ export async function getHeroTrailers(movieId?: number, tvId?: number) {
 
   if (movieId) {
     try {
-      movieTrailer = await fetchMovieTrailer(movieId);
+      movieTrailer = await fetchMediaTrailer(movieId, "movie");
     } catch (error) {
       console.warn("Movie trailer non trovato, uso fallback statico.", error);
     }
@@ -14,7 +14,7 @@ export async function getHeroTrailers(movieId?: number, tvId?: number) {
 
   if (tvId) {
     try {
-      tvTrailer = await fetchMovieTrailer(tvId);
+      tvTrailer = await fetchMediaTrailer(tvId, "tv");
     } catch (error) {
       console.warn("TV trailer non trovato, uso fallback statico.", error);
     }

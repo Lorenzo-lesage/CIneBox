@@ -16,8 +16,8 @@ class MovieListData extends Data
         public readonly ?string $poster_path,
         public readonly ?string $backdrop_path,
         public readonly array $genres = [],
-        public readonly float $vote_average,
-        public readonly ?string $release_date,
+        public readonly float $vote_average = 0,
+        public readonly ?string $release_date = null,
         public readonly float $community_rating = 0,
         public readonly bool $is_favorite = false,
         public readonly float $popularity = 0
@@ -49,9 +49,6 @@ class MovieListData extends Data
         );
 
         // Step 3: Return final immutable instance
-        return new self(
-            ...$instance->toArray(),
-            genres: $genres
-        );
+       return new self(...$instance->toArray(), genres: $genres);
     }
 }

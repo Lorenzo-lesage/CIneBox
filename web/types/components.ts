@@ -33,6 +33,7 @@ export interface ProcessedHomeData {
 export interface HomeListProps {
   processedData: ProcessedHomeData;
   isFetchingNextPage: boolean;
+  type: "movie" | "tv";
 }
 
 export interface HeroBannerProps {
@@ -58,6 +59,7 @@ export interface MovieRowProps {
   movies: Movie[];
   genreId?: string | number;
   rowStyle?: "default" | "bigger";
+  type: "movie" | "tv";
 }
 
 export interface MovieCardControlsProps {
@@ -69,6 +71,7 @@ export interface MovieCardControlsProps {
 export interface MovieCardProps {
   movie: Movie;
   rowStyle?: "default" | "bigger";
+  type: "movie" | "tv";
 }
 
 export interface MovieCardPlayerProps {

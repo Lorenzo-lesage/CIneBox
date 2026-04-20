@@ -25,8 +25,8 @@ class MovieData extends Data
         public readonly ?string $backdrop_path,
         public readonly ?string $trailer_key,
         public readonly array $genres = [],
-        public readonly float $vote_average,
-        public readonly ?string $release_date,
+        public readonly float $vote_average = 0,
+        public readonly ?string $release_date = null,
         public readonly array $cast = [],
         public readonly ?string $director = null,
         public readonly array $similar = [],
@@ -34,13 +34,13 @@ class MovieData extends Data
         public readonly ?string $certification = null,
         public readonly array $keywords = [],
         public readonly array $watch_providers = [],
-        public readonly ?int $runtime,
-        public readonly ?string $tagline,
-        public readonly ?string $status,
-        public readonly ?int $budget,
-        public readonly ?int $revenue,
-        public readonly ?string $homepage,
-        public readonly ?string $imdb_url,
+        public readonly ?int $runtime = null,
+        public readonly ?string $tagline = null,
+        public readonly ?string $status = null,
+        public readonly ?int $budget = null,
+        public readonly ?int $revenue = null,
+        public readonly ?string $homepage = null,
+        public readonly ?string $imdb_url = null,
         public readonly array $production_companies = [],
         public readonly array $production_countries = [],
         public readonly array $spoken_languages = [],
@@ -96,10 +96,7 @@ class MovieData extends Data
         );
 
         // Step 3: Return final immutable instance with genres filled
-        return new self(
-            ...$instance->toArray(),
-            genres: $genres
-        );
+        return new self(...$instance->toArray(), genres: $genres);
     }
 
     // --- Private Extraction Helpers (Improving Readability and Maintainability) ---
@@ -174,7 +171,7 @@ class MovieData extends Data
     {
         $releaseDate = $data['release_date'] ?? $data['first_air_date'] ?? null;
         return ($data['status'] !== 'Released') ||
-               ($releaseDate && strtotime($releaseDate) > time());
+            ($releaseDate && strtotime($releaseDate) > time());
     }
 
     private static function extractCertification(array $data): ?string

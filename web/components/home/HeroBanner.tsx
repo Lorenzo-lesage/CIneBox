@@ -67,7 +67,7 @@ export function HeroBanner({
         {/* 2. IL VIDEO APPARE SOLO QUANDO IL CLIENT È PRONTO */}
         {trailerKey && (
           <ReactPlayer
-            src={`https://www.youtube-nocookie.com/watch?v=${trailerKey}?vq=hd1080autoplay=1`}
+            src={`https://www.youtube-nocookie.com/watch?v=${trailerKey}&vq=hd1080autoplay=1`}
             playing
             muted={!isActive}
             loop

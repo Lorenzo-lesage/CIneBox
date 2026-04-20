@@ -10,7 +10,7 @@ import { useMute } from "@/hooks/useMute";
 import { useAudioStore } from "@/store/audioStore";
 
 // Fetch
-import { fetchMovieTrailer } from "@/services/movieService";
+import { fetchMediaTrailer } from "@/services/movieService";
 import { useQuery } from "@tanstack/react-query";
 
 // Componets
@@ -24,7 +24,7 @@ import { Card, CardContent } from "@/components/ui/card";
 // Types
 import { MovieCardProps } from "@/types/components";
 
-export function MovieCard({ movie, rowStyle = "default" }: MovieCardProps) {
+export function MovieCard({ movie, rowStyle = "default", type }: MovieCardProps) {
   /*
   |--------------------------------------------------------------------------
   | Data
@@ -36,7 +36,7 @@ export function MovieCard({ movie, rowStyle = "default" }: MovieCardProps) {
   const [showVideo, setShowVideo] = useState(false);
   const { playerRef, forceMute } = useMute(true);
   const { activeVideoId, setActiveVideoId } = useAudioStore();
-  const cardUniqueId = `card-${movie.id}`;
+  const cardUniqueId = `card-${movie.id}-${type}`;
   const isActive = activeVideoId === cardUniqueId;
 
   /*
@@ -47,8 +47,8 @@ export function MovieCard({ movie, rowStyle = "default" }: MovieCardProps) {
   | Once enabled, the query is cached for 30 minutes.
   */
   const { data: trailerData } = useQuery({
-    queryKey: ["trailer", movie.id],
-    queryFn: () => fetchMovieTrailer(movie.id),
+    queryKey: ["trailer", movie.id, type],
+    queryFn: () => fetchMediaTrailer(movie.id, type),
     enabled: isHovered,
     staleTime: 1000 * 60 * 30,
   });

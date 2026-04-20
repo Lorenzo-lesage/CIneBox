@@ -22,7 +22,7 @@ class MovieController extends Controller
 
         $endpoint = ($type === 'tv') ? 'discover/tv' : 'discover/movie';
 
-        $results = $this->tmdbService->getMoviesList($endpoint, [], $page, $sortBy);
+        $results = $this->tmdbService->getMediaList($endpoint, [], $page, 'en-US', $sortBy);
 
         return response()->json($results);
     }
@@ -40,7 +40,7 @@ class MovieController extends Controller
     public function show(int $tmdbId, Request $request)
     {
         $type = $request->query('type', 'movie');
-        $movieData = $this->tmdbService->getMovie($tmdbId, 'en-US');
+        $movieData = $this->tmdbService->getMedia($tmdbId, $type, 'en-US');
 
         // 2. Check if we have local data (ratings, etc.)
         $localMovie = Movie::firstWhere('tmdb_id', $tmdbId);
@@ -73,9 +73,9 @@ class MovieController extends Controller
      * @param TmdbServiceInterface $tmdbService
      * @return \Illuminate\Http\JsonResponse
      */
-    public function trailer(int $id, TmdbServiceInterface $tmdbService)
+    public function trailer(string $type, int $id, TmdbServiceInterface $tmdbService)
     {
-        $trailerKey = $tmdbService->getMovieTrailer($id);
+        $trailerKey = $tmdbService->getMediaTrailer($id, $type);
 
         if (!$trailerKey) {
             return response()->json(['message' => 'Trailer not found'], 404);

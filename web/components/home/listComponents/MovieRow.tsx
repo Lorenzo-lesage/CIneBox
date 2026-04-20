@@ -24,6 +24,7 @@ export function MovieRow({
   movies,
   genreId,
   rowStyle = "default",
+  type,
 }: MovieRowProps) {
   /*
   
@@ -52,7 +53,7 @@ export function MovieRow({
                   "basis-[40%] sm:basis-[45%] md:basis-[33%] lg:basis-[24%] xl:basis-[20%] pl-2",
                 )}
               >
-                <MovieCard movie={movie} rowStyle={rowStyle} />
+                <MovieCard movie={movie} rowStyle={rowStyle} type={type} />
               </CarouselItem>
             ))}
 

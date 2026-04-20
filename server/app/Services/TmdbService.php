@@ -60,11 +60,11 @@ class TmdbService implements TmdbServiceInterface
      * @param string $lang
      * @return MovieData
      */
-    public function getMovie(int $tmdbId, string $lang = 'en-US'): MovieData
+    public function getMedia(int $tmdbId, string $type = 'movie', string $lang = 'en-US'): MovieData
     {
         $appendToResponse = implode(',', self::MOVIE_APPEND);
 
-        $response = $this->request('GET', "/movie/{$tmdbId}", [
+        $response = $this->request('GET', "/{$type}/{$tmdbId}", [
             'language' => $lang,
             'append_to_response' => $appendToResponse
         ]);
@@ -83,7 +83,7 @@ class TmdbService implements TmdbServiceInterface
      * @param string $sortBy
      * @return array
      */
-    public function getMoviesList(string $endpoint, array $params = [], int $page = 1, string $lang = 'en-US', string $sortBy = 'popularity.desc'): array
+    public function getMediaList(string $endpoint, array $params = [], int $page = 1, string $lang = 'en-US', string $sortBy = 'popularity.desc'): array
     {
         $response = $this->request('GET', "/{$endpoint}", array_merge([
             'language' => $lang,
@@ -105,9 +105,9 @@ class TmdbService implements TmdbServiceInterface
      * @param int $tmdbId
      * @return string|null
      */
-    public function getMovieTrailer(int $tmdbId): ?string
+    public function getMediaTrailer(int $tmdbId, string $type = 'movie'): ?string
     {
-        $response = $this->request('GET', "/movie/{$tmdbId}/videos");
+        $response = $this->request('GET', "/{$type}/{$tmdbId}/videos");
 
         return collect($response->json('results'))
             ->where('site', 'YouTube')

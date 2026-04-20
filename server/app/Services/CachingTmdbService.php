@@ -28,21 +28,21 @@ class CachingTmdbService implements TmdbServiceInterface
      * @param string $lang
      * @return MovieData
      */
-    public function getMovie(int $tmdbId, string $lang = 'en-US'): MovieData
+    public function getMedia(int $tmdbId, string $type = 'movie', string $lang = 'en-US'): MovieData
     {
-        $key = "movie_{$tmdbId}_{$lang}";
+        $key = "movie_{$tmdbId}_{$type}_{$lang}";
         $cache = Cache::tags(['movies']);
 
         if ($cached = $cache->get($key)) {
             return $cached;
         }
 
-        return Cache::lock("lock_{$key}", 10)->block(5, function () use ($tmdbId, $lang, $key, $cache) {
+        return Cache::lock("lock_{$key}", 10)->block(5, function () use ($tmdbId, $type, $lang, $key, $cache) {
             if ($cached = $cache->get($key)) {
                 return $cached;
             }
 
-            $movie = $this->inner->getMovie($tmdbId, $lang);
+            $movie = $this->inner->getMedia($tmdbId, $type, $lang);
             $cache->put($key, $movie, now()->addDay());
 
             return $movie;
@@ -60,12 +60,12 @@ class CachingTmdbService implements TmdbServiceInterface
      * @param string $sortBy
      * @return array
      */
-    public function getMoviesList(string $endpoint, array $params = [], int $page = 1, string $lang = 'en-US', string $sortBy = 'popularity.desc'): array
+    public function getMediaList(string $endpoint, array $params = [], int $page = 1, string $lang = 'en-US', string $sortBy = 'popularity.desc'): array
     {
         $cacheKey = "list_" . md5($endpoint . serialize($params) . $page . $lang . $sortBy);
 
         return Cache::tags(['movies', 'lists'])->remember($cacheKey, now()->addHours(6), function () use ($endpoint, $lang, $params, $page, $sortBy) {
-            return $this->inner->getMoviesList($endpoint, $params, $page, $lang, $sortBy);
+            return $this->inner->getMediaList($endpoint, $params, $page, $lang, $sortBy);
         });
     }
 
@@ -76,12 +76,12 @@ class CachingTmdbService implements TmdbServiceInterface
      * @param int $tmdbId
      * @return string|null
      */
-    public function getMovieTrailer(int $tmdbId): ?string
+    public function getMediaTrailer(int $tmdbId, string $type = 'movie'): ?string
     {
-        $key = "movie_trailer_{$tmdbId}";
+        $key = "movie_trailer_{$tmdbId}_{$type}";
 
-        return Cache::remember($key, now()->addWeek(), function () use ($tmdbId) {
-            return $this->inner->getMovieTrailer($tmdbId);
+        return Cache::remember($key, now()->addWeek(), function () use ($tmdbId, $type) {
+            return $this->inner->getMediaTrailer($tmdbId, $type);
         });
     }
 }
