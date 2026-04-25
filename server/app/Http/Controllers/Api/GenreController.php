@@ -18,9 +18,8 @@ class GenreController extends Controller
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function index(Request $request)
+    public function index(string $type, Request $request)
     {
-        $type = $request->query('type', 'movie'); // Default a movie
 
         // Recuperiamo i generi dal file config/tmdb.php che abbiamo creato
         $genres = config('tmdb.genres');
@@ -38,9 +37,8 @@ class GenreController extends Controller
     /**
      * Movies by genre
      */
-    public function movies(int $genreId, Request $request)
+    public function movies(string $type, int $genreId, Request $request)
     {
-        $type = $request->query('type', 'movie');
         $page = $request->input('page', 1);
         $sortBy = $this->tmdbService->getSortValue($request->input('sort_by', 'popular'));
 

@@ -57,15 +57,19 @@ class MovieData extends Data
      */
     public static function fromTmdb(array $data): self
     {
-        // Step 1: Create initial instance to handle basic fields and trigger helpers
-        $instance = new self(
+        $genres = self::mapTmdbGenres(
+            $data['genres'] ?? [],
+            $data['genre_ids'] ?? []
+        );
+
+        return new self(
             id: $data['id'],
             title: $data['title'] ?? $data['name'] ?? 'Untitled',
             overview: $data['overview'] ?? null,
             poster_path: $data['poster_path'] ?? null,
             backdrop_path: $data['backdrop_path'] ?? null,
             trailer_key: self::extractTrailer($data),
-            genres: [], // To be filled using trait below
+            genres: $genres,
             vote_average: (float) ($data['vote_average'] ?? 0),
             release_date: $data['release_date'] ?? $data['first_air_date'] ?? null,
             cast: self::extractCast($data),
@@ -88,15 +92,6 @@ class MovieData extends Data
             collection_name: data_get($data, 'belongs_to_collection.name'),
             is_upcoming: self::checkIfUpcoming($data),
         );
-
-        // Step 2: Map genres using the trait method
-        $genres = $instance->mapTmdbGenres(
-            $data['genres'] ?? [],
-            $data['genre_ids'] ?? []
-        );
-
-        // Step 3: Return final immutable instance with genres filled
-        return new self(...$instance->toArray(), genres: $genres);
     }
 
     // --- Private Extraction Helpers (Improving Readability and Maintainability) ---

@@ -18,7 +18,7 @@ class MovieListData extends Data
         public readonly array $genres = [],
         public readonly float $vote_average = 0,
         public readonly ?string $release_date = null,
-        public readonly float $community_rating = 0,
+        public float $community_rating = 0,
         public readonly bool $is_favorite = false,
         public readonly float $popularity = 0
     ) {}
@@ -28,27 +28,22 @@ class MovieListData extends Data
      */
     public static function fromTmdb(array $data): self
     {
-        // Step 1: Create initial instance to trigger trait usage
-        $instance = new self(
+        $genres = self::mapTmdbGenres(
+            $data['genres'] ?? [],
+            $data['genre_ids'] ?? []
+        );
+
+        return new self(
             id: $data['id'],
             title: $data['title'] ?? $data['name'] ?? 'Untitled',
             overview: $data['overview'] ?? null,
             poster_path: $data['poster_path'] ?? null,
             backdrop_path: $data['backdrop_path'] ?? null,
-            genres: [], // Temporary, filled below
+            genres: $genres,
             vote_average: (float) ($data['vote_average'] ?? 0),
             release_date: $data['release_date'] ?? $data['first_air_date'] ?? null,
             community_rating: (float) ($data['community_rating'] ?? 0),
             popularity: (float) ($data['popularity'] ?? 0),
         );
-
-        // Step 2: Map genres using the Trait method
-        $genres = $instance->mapTmdbGenres(
-            $data['genres'] ?? [],
-            $data['genre_ids'] ?? []
-        );
-
-        // Step 3: Return final immutable instance
-       return new self(...$instance->toArray(), genres: $genres);
     }
 }

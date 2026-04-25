@@ -63,7 +63,7 @@ export function MovieRow({
                   "basis-[40%] sm:basis-[40%] md:basis-[30%] lg:basis-[20%] xl:basis-[10%] pl-3 ml-3",
                 )}
               >
-                <Link href={`/genres/${genreId}`} className="group h-45 block">
+                <Link href={`/genres/${type}/${genreId}`} className="group h-45 block">
                   <div className="h-full bg-zinc-900/40 rounded-md border-2 border-dashed border-zinc-800 group-hover:border-red-600 group-hover:bg-zinc-900 transition-all flex flex-col items-center justify-center gap-3">
                     <div className="p-3 rounded-full bg-zinc-800 group-hover:bg-red-600 transition-colors">
                       <ChevronRight className="w-6 h-6 text-white" />

@@ -7,7 +7,7 @@ trait HasTmdbGenres
     /**
      * Maps TMDB genre IDs to their human-readable labels.
      */
-    protected function mapTmdbGenres(array $genres, array $genreIds = []): array
+    protected static function mapTmdbGenres(array $genres, array $genreIds = []): array
     {
         // 1. Build the map from config (movie and tv genres)
         $genreMap = collect(config('tmdb.genres'))
