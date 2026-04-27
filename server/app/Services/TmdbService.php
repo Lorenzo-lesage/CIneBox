@@ -6,6 +6,8 @@ use App\Data\MovieData;
 use App\Data\MovieListData;
 use App\Exceptions\TmdbApiException;
 use Illuminate\Support\Facades\Http;
+use App\Data\GenreMediaListData;
+
 
 class TmdbService implements TmdbServiceInterface
 {
@@ -96,6 +98,37 @@ class TmdbService implements TmdbServiceInterface
         return $results->take(10)
             ->map(fn(array $movie) => MovieListData::fromTmdb($movie)->toArray())
             ->toArray();
+    }
+
+    /**
+     * Get a paginated media list from TMDB.
+     *
+     * @param string $endpoint
+     * @param array $params
+     * @param int $page
+     * @param string $lang
+     * @param string $sortBy
+     * @param array $genre
+     * @return GenreMediaListData
+     */
+    public function getPaginatedMediaList(
+        string $endpoint,
+        array $params = [],
+        int $page = 1,
+        string $lang = 'en-US',
+        string $sortBy = 'popularity.desc',
+        array $genre = [],
+    ): GenreMediaListData {
+        $response = $this->request('GET', "/{$endpoint}", array_merge([
+            'language' => $lang,
+            'page' => $page,
+            'sort_by' => $sortBy,
+        ], $params));
+
+        return GenreMediaListData::fromTmdb([
+            ...$response->json(),
+            'genre' => $genre,
+        ]);
     }
 
     /**

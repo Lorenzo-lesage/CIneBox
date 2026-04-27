@@ -34,7 +34,7 @@ export function NavbarDesktop() {
   */
 
   return (
-    <nav className="absolute top-0 w-full z-50 bg-transparent">
+    <nav className="w-full z-50 bg-transparent">
       <div className="m mx-auto sm:px-6">
         <div className="flex items-center justify-between h-16 ">
           {/* Logo o Brand */}

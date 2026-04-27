@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Data\MovieData;
+use App\Data\GenreMediaListData;
 
 interface TmdbServiceInterface
 {
@@ -13,4 +14,13 @@ interface TmdbServiceInterface
     public function getMediaTrailer(int $tmdbId, string $type = 'movie'): ?string;
 
     public function getSortValue(string $sortKey): string;
+
+    public function getPaginatedMediaList(
+        string $endpoint,
+        array $params = [],
+        int $page = 1,
+        string $lang = 'en-US',
+        string $sortBy = 'popularity.desc',
+        array $genre = [],
+    ): GenreMediaListData;
 }

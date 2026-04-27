@@ -78,7 +78,6 @@ export default function HomePageClient({
       .map((key) => ({
         ...serverData[key],
         key: `server-${key}`,
-        genreId: key,
       }));
 
     // Generi caricate via Scroll (Client)
@@ -94,7 +93,6 @@ export default function HomePageClient({
           .map((key) => ({
             ...page[key],
             key: `extra-${key}-${pageIndex}`,
-            genreId: key,
           })),
       ) || [];
 

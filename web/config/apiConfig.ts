@@ -6,5 +6,11 @@ export const apiConfig = {
     genres: (type: string) => `/genres/${type}`,
     mediasByGenre: (genreId: string | number, type: string, page: number) =>
       `/genres/${genreId}/${type}?page=${page}`,
+    paginatedMediasByGenre: (
+      type: string,
+      genreId: string | number,
+      page: number,
+      sortBy: string,
+    ) => `/genres/${type}/${genreId}/paginated?page=${page}&sort_by=${sortBy}`,
   },
 };

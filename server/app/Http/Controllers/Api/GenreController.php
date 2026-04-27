@@ -54,4 +54,47 @@ class GenreController extends Controller
             )
         );
     }
+
+    /**
+     * Paginated media by genre.
+     */
+    public function paginatedMedia(string $type, string $genreId, Request $request)
+    {
+        /*
+        |--------------------------------------------------------------------------
+        | Data
+        |--------------------------------------------------------------------------
+        */
+        $genreId = (int) $genreId;
+        $page = (int) $request->input('page', 1);
+        $sortBy = $this->tmdbService->getSortValue($request->input('sort_by', 'popular'));
+        $endpoint = "discover/{$type}";
+
+        $genre = collect(config('tmdb.genres'))
+            ->first(function (array $genre) use ($type, $genreId) {
+                return (int) ($genre[$type] ?? 0) === $genreId;
+            });
+
+        /*
+        |--------------------------------------------------------------------------
+        | Response
+        |--------------------------------------------------------------------------
+        */
+
+        return response()->json(
+            $this->tmdbService->getPaginatedMediaList(
+                $endpoint,
+                ['with_genres' => $genreId],
+                $page,
+                'en-US',
+                $sortBy,
+                [
+                    'id' => $genreId,
+                    'type' => $type,
+                    'key' => $genre['key'] ?? null,
+                    'label' => $genre['label'] ?? null,
+                ],
+            )
+        );
+    }
 }

@@ -58,8 +58,11 @@ Route::prefix('v1')->group(function () {
         // Movies by genre
         Route::get('/{genreId}/{type}', [GenreController::class, 'movies'])
             ->name('genres.movies');
-    });
 
+        // Movies by genre paginated
+        Route::get('/{type}/{genreId}/paginated', [GenreController::class, 'paginatedMedia'])
+            ->name('genres.paginated');
+    });
 
     /*
     |--------------------------------------------------------------------------

@@ -82,7 +82,7 @@ export function MovieCardPlayer({
             </div>
           </div>
         )}
-        <div className="hidden group-hover:block absolute -bottom-10 z-50 w-full px-4 space-y-1">
+        <div className="hidden group-hover:block absolute -bottom-10 z-50 w-full px-4 space-y-1 bg-background">
           <p className="text-primary truncate">
             {movie.genres.map((genre) => genre).join(" - ")}
           </p>

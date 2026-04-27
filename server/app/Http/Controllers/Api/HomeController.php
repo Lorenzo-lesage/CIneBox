@@ -59,6 +59,7 @@ class HomeController extends Controller
 
                 $response[$genre['key']] = [
                     'label' => $genre['label'],
+                    'genreId' => $genreId,
                     'data'  => $this->tmdbService->getMediaList("discover/{$type}", ['with_genres' => $genreId])
                 ];
             }

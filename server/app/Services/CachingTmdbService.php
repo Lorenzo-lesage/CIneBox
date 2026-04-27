@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Data\MovieData;
+use App\Data\GenreMediaListData;
 use Illuminate\Support\Facades\Cache;
 
 class CachingTmdbService implements TmdbServiceInterface
@@ -68,6 +69,49 @@ class CachingTmdbService implements TmdbServiceInterface
             return $this->inner->getMediaList($endpoint, $params, $page, $lang, $sortBy);
         });
     }
+
+    /**
+     * Get a paginated media list from TMDB.
+     *
+     * @param string $endpoint
+     * @param array $params
+     * @param int $page
+     * @param string $lang
+     * @param string $sortBy
+     * @param array $genre
+     * @return GenreMediaListData
+     */
+    public function getPaginatedMediaList(
+        string $endpoint,
+        array $params = [],
+        int $page = 1,
+        string $lang = 'en-US',
+        string $sortBy = 'popularity.desc',
+        array $genre = [],
+    ): GenreMediaListData {
+        $cacheKey = 'paginated_list_' . md5(
+            $endpoint . serialize($params) . $page . $lang . $sortBy . serialize($genre)
+        );
+
+        return Cache::tags(['movies', 'lists'])->remember($cacheKey, now()->addHours(6), function () use (
+            $endpoint,
+            $params,
+            $page,
+            $lang,
+            $sortBy,
+            $genre
+        ) {
+            return $this->inner->getPaginatedMediaList(
+                $endpoint,
+                $params,
+                $page,
+                $lang,
+                $sortBy,
+                $genre,
+            );
+        });
+    }
+
 
     /**
      * Get a movie trailer from TMDB

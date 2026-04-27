@@ -1,4 +1,6 @@
 @import "tailwindcss";
+@source "../components"; /* Aggiungi questa riga se i tuoi componenti sono lì */
+@source "../app";        /* Aggiungi questa per la cartella app */
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 
