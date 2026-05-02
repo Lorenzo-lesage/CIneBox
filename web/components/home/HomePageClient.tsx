@@ -50,6 +50,7 @@ export default function HomePageClient({
         lastPage.hasMore ? lastPage.nextPage : undefined,
       staleTime: 1000 * 60 * 5,
     });
+  const isInitialLoading = !data && !serverData;
 
   /*
   |--------------------------------------------------------------------------
@@ -134,7 +135,12 @@ export default function HomePageClient({
       </div>
 
       {/* --- Movies --- */}
-      <List processedData={processedData} isFetchingNextPage={isFetchingNextPage} type={type} />
+      <List
+        processedData={processedData}
+        isFetchingNextPage={isFetchingNextPage}
+        type={type}
+        isLoading={isInitialLoading}
+      />
     </main>
   );
 }

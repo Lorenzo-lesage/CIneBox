@@ -3,5 +3,5 @@ export const metadata = {
 };
 
 export default function Login() {
-  return <div>Login</div>;
+  return <div className="md:mt-20">Login</div>;
 }

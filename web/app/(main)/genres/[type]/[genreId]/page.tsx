@@ -5,23 +5,9 @@ import { fetchPaginatedGenreMedia } from "@/services/movieService";
 import GenrePageClient from "@/components/genres/GenrePageClient";
 
 // Types
-import { MediaType } from "@/types/movie";
+import { GenrePageProps } from "@/types/genre";
 
-interface GenrePageProps {
-  params: Promise<{
-    type: MediaType;
-    genreId: string;
-  }>;
-  searchParams: Promise<{
-    page?: string;
-    sort_by?: string;
-  }>;
-}
-
-export default async function Page({
-  params,
-  searchParams,
-}: GenrePageProps) {
+export default async function Page({ params, searchParams }: GenrePageProps) {
   /*
   | -------------------------------------------------------------------------
   | Data
@@ -54,11 +40,12 @@ export default async function Page({
   */
 
   return (
-    <GenrePageClient
-      initialData={initialData}
-      genreId={genreId}
-      type={type}
-      initialSortBy={sortBy}
-    />
+    <div className="md:mt-20">
+      <GenrePageClient
+        initialData={initialData}
+        type={type}
+        initialSortBy={sortBy}
+      />
+    </div>
   );
 }

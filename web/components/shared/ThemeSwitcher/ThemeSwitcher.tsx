@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 
 // Theme
 import { useTheme } from "next-themes";
@@ -29,10 +30,12 @@ export function ThemeSwitcher() {
   */
 
   const { theme, setTheme } = useTheme();
+  const pathname = usePathname();
   const shadowStyle = { filter: "drop-shadow(2px 2px 6px rgba(0, 0, 0, 0.5))" };
   const [currentTheme, setCurrentTheme] = useState<string | undefined>(
     undefined,
   );
+  const isNotHome = pathname !== "/";
 
   /*
   |---------------------------------------------------------------------------
@@ -56,7 +59,13 @@ export function ThemeSwitcher() {
         <NavigationMenuItem>
           {/* Nota: Ho rimosso la freccia di default di Shadcn per gestirla manualmente con l'ombra */}
           <NavigationMenuTrigger className="!bg-transparent border-none h-9 px-3 font-black text-foreground [&>svg]:hidden">
-            <div className="flex items-center text-white">
+            <div
+              className={
+                isNotHome
+                  ? "flex items-center text-primary"
+                  : "flex items-center text-white"
+              }
+            >
               {/* Se currentTheme è undefined, siamo in fase di caricamento/SSR */}
               {currentTheme === undefined ? (
                 <>
@@ -75,7 +84,11 @@ export function ThemeSwitcher() {
                     <Moon className="h-4 w-4 mr-2" style={shadowStyle} />
                   )}
                   <ChevronDown
-                    className="h-3 w-3 transition-transform duration-200 group-data-[state=open]:rotate-180 text-white"
+                    className={
+                      isNotHome
+                        ? "h-3 w-3 transition-transform duration-200 group-data-[state=open]:rotate-180 text-primary"
+                        : "h-3 w-3 transition-transform duration-200 group-data-[state=open]:rotate-180 text-white"
+                    }
                     style={{
                       filter: "drop-shadow(2px 2px 6px rgba(0, 0, 0, 0.5))",
                     }}

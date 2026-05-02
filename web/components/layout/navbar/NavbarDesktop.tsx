@@ -22,9 +22,13 @@ export function NavbarDesktop() {
 
   const pathname = usePathname();
   const isLinkActive = (href: string) => pathname === href;
-  const linkStyles =
+  const isNotHome = pathname !== "/";
+  const linkStyles = isNotHome ?
+    "text-primary flex items-center" :
     "transition-opacity font-black text-white flex items-center";
-  const activeStyles = "text-white opacity-20 cursor-default";
+  const activeStyles = isNotHome
+    ? "text-primary opacity-100"
+    : "text-white opacity-20 cursor-default pointer-events-none";
   const inactiveStyles = "opacity-70 hover:border-b-2 border-primary";
 
   /*
@@ -34,7 +38,7 @@ export function NavbarDesktop() {
   */
 
   return (
-    <nav className="w-full z-50 bg-transparent">
+    <nav className="w-full absolute top-0 z-50 bg-transparent">
       <div className="m mx-auto sm:px-6">
         <div className="flex items-center justify-between h-16 ">
           {/* Logo o Brand */}
@@ -53,7 +57,6 @@ export function NavbarDesktop() {
                   filter: "drop-shadow(2px 2px 6px rgba(46, 4, 4, 0.87))",
                 }}
               />
-   
             </Link>
           </div>
 

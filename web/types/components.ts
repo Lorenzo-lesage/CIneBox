@@ -12,7 +12,7 @@ export interface HomeDataResponse {
 export interface HomePageClientProps {
   initialMovieData: HomeDataResponse;
   initialTvData: HomeDataResponse;
-  initialMovieTrailerData: { trailer_key: string | null};
+  initialMovieTrailerData: { trailer_key: string | null };
   initialTvTrailerData: { trailer_key: string | null };
 }
 
@@ -34,6 +34,7 @@ export interface HomeListProps {
   processedData: ProcessedHomeData;
   isFetchingNextPage: boolean;
   type: "movie" | "tv";
+  isLoading: boolean;
 }
 
 export interface HeroBannerProps {
@@ -60,6 +61,7 @@ export interface MovieRowProps {
   genreId?: string | number;
   rowStyle?: "default" | "bigger";
   type: "movie" | "tv";
+  isLoading?: boolean;
 }
 
 export interface MovieCardControlsProps {
@@ -97,4 +99,29 @@ export interface ThemeItemProps {
 
 export interface FeaturedMovie {
   featuredMovie: Movie;
+}
+
+export interface Genre {
+  type: "movie" | "tv";
+  initialData: {
+    data: Movie[];
+    current_page: number;
+    total_pages: number;
+    total_results: number;
+  };
+  isPending: boolean;
+}
+
+export interface SortProps {
+  currentSortBy: string;
+  handleSortChange: (value: string) => void;
+  sortOptions: { value: string; label: string }[];
+}
+
+
+export interface PaginationProps {
+  currentPage: number;
+  totalPages: number;
+  handlePageChange: (page: number) => void;
+  isPending: boolean;
 }

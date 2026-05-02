@@ -13,14 +13,14 @@ export function BannerList({ featuredMovie }: FeaturedMovie) {
         className="h-full w-full object-cover opacity-50"
         fill
       />
-      <div className="absolute bottom-10 left-10 z-20 max-w-md">
+      <div className="absolute bottom-10 md:left-10 left-0 px-2 z-20 max-w-md">
         <span className="text-red-600 font-bold uppercase text-xs tracking-[0.3em]">
           Must Watch
         </span>
         <h3 className="text-4xl font-black">
           {featuredMovie.title || featuredMovie.name}
         </h3>
-        <p className="mt-2 line-clamp-2 text-sm text-zinc-400">
+        <p className="mt-2 line-clamp-2 text-sm text-foreground/50">
           {featuredMovie.overview}
         </p>
       </div>

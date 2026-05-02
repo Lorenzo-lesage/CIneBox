@@ -11,7 +11,7 @@ export function MovieCardText({ movie }: MovieCardTextProps) {
   return (
     <>
       <p
-        className="text-white font-bold text-sm truncate"
+        className="text-white font-bold text-sm truncate md:block hidden"
         style={{ textShadow: "0px 0px 4px rgba(0, 0, 0, 1)" }}
       >
         {movie.title || movie.name}

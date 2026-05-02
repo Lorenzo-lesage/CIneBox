@@ -108,14 +108,14 @@ export function MovieCard({ movie, rowStyle = "default", type }: MovieCardProps)
   return (
     <Card
       className={cn(
-        "h-64 bg-transparent !border-0 !ring-0 group cursor-pointer overflow-visible",
-        rowStyle === "bigger" && "h-100",
+        "h-50 md:h-64 bg-transparent !border-0 !ring-0 p-0 group cursor-pointer overflow-visible rounded-xl",
+        rowStyle === "bigger" && "h-50 md:h-100",
       )}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
       <CardContent className={cn(
-        "p-0 relative w-full h-full transition-all duration-300 md:hover:scale-130 hover:z-5",
+        "p-0 relative w-full h-full transition-all duration-300 md:hover:scale-130 hover:z-5 group",
         rowStyle === "bigger" && "md:hover:scale-110",
       )}>
         <MovieCardPlayer
@@ -129,9 +129,9 @@ export function MovieCard({ movie, rowStyle = "default", type }: MovieCardProps)
         />
 
         {/* --- Content Card --- */}
-        <div className="absolute inset-0 flex flex-col justify-end p-4">
+        <div className="absolute inset-0 flex flex-col justify-end md:p-4 p-1">
           {/* Button detail and like */}
-          <div className="absolute top-0 right-[50%] text-white z-21 transform translate-x-1/2 -translate-y-1/2 z-21 flex items-center gap-2">
+          <div className="absolute top-0 right-[50%] text-white transform translate-x-1/2 -translate-y-1/2 flex items-center gap-2 group-hover:z-21">
             <MovieCardControls
               movie={movie}
               isFavorited={isFavorited}

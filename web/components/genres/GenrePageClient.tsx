@@ -5,57 +5,17 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 // Components
 import GenresGrid from "@/components/genres/GenresGrid";
-
-// UI
-import { Button } from "@/components/ui/button";
+import { SortBy } from "@/components/shared/SortBy";
+import { PaginationMedia } from "@/components/shared/PaginationMedia";
 
 // Types
-import { MediaType, Movie } from "@/types/movie";
+import { GenrePageClientProps, GenreSortValue } from "@/types/genre";
 
-type GenreSortValue =
-  | "popular"
-  | "top_rated"
-  | "latest"
-  | "newest"
-  | "oldest"
-  | "title_az"
-  | "title_za";
-
-interface GenreMetadata {
-  id: number;
-  type: MediaType;
-  key: string | null;
-  label: string | null;
-}
-
-interface GenrePageResponse {
-  data: Movie[];
-  current_page: number;
-  total_pages: number;
-  total_results: number;
-  genre: GenreMetadata;
-}
-
-interface GenrePageClientProps {
-  initialData: GenrePageResponse;
-  genreId: string;
-  type: MediaType;
-  initialSortBy: GenreSortValue;
-}
-
-const sortOptions: Array<{ value: GenreSortValue; label: string }> = [
-  { value: "popular", label: "Most Popular" },
-  { value: "top_rated", label: "Top Rated" },
-  { value: "latest", label: "Latest Release" },
-  { value: "newest", label: "Newest First" },
-  { value: "oldest", label: "Oldest First" },
-  { value: "title_az", label: "Title A-Z" },
-  { value: "title_za", label: "Title Z-A" },
-];
+// Options
+import { sortOptions } from "@/lib/sortOptions";
 
 export default function GenrePageClient({
   initialData,
-  genreId,
   type,
   initialSortBy,
 }: GenrePageClientProps) {
@@ -122,44 +82,24 @@ export default function GenrePageClient({
   */
 
   return (
-    <main className="min-h-screen px-4 py-10 md:px-10 lg:px-16">
+    <main className="min-h-screen px-4 pb-8 md:px-10 lg:px-16">
       <section className="space-y-8">
         <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
           <div className="space-y-2">
-            <p className="text-sm uppercase tracking-[0.2em] text-zinc-500">
-              {mediaLabel}
-            </p>
-
             <h1 className="text-3xl font-bold tracking-tight md:text-5xl">
               {genreLabel}
             </h1>
 
             <p className="text-sm text-zinc-400">
-              Genre ID: {genreId} • {initialData.total_results} results
+              {mediaLabel} • {initialData.total_results} results
             </p>
           </div>
 
-          <div className="flex w-full flex-col gap-2 md:w-72">
-            <label
-              htmlFor="sort_by"
-              className="text-sm font-medium text-zinc-300"
-            >
-              Sort by
-            </label>
-
-            <select
-              id="sort_by"
-              value={currentSortBy}
-              onChange={(event) => handleSortChange(event.target.value)}
-              className="h-11 rounded-md border border-zinc-800 bg-zinc-950 px-3 text-sm text-white outline-none focus:border-red-600"
-            >
-              {sortOptions.map((option) => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </select>
-          </div>
+          <SortBy
+            currentSortBy={currentSortBy}
+            handleSortChange={handleSortChange}
+            sortOptions={sortOptions}
+          />
         </div>
 
         {initialData.data.length === 0 ? (
@@ -169,30 +109,19 @@ export default function GenrePageClient({
             </p>
           </div>
         ) : (
-            <GenresGrid initialData={initialData} type={type} />
+          <GenresGrid
+            initialData={initialData}
+            type={type}
+            isPending={isPending}
+          />
         )}
 
-        <div className="flex items-center justify-center gap-3 pt-4">
-          <Button
-            variant="outline"
-            onClick={() => handlePageChange(currentPage - 1)}
-            disabled={currentPage <= 1 || isPending}
-          >
-            Previous
-          </Button>
-
-          <span className="text-sm text-zinc-400">
-            Page {currentPage} of {totalPages}
-          </span>
-
-          <Button
-            variant="outline"
-            onClick={() => handlePageChange(currentPage + 1)}
-            disabled={currentPage >= totalPages || isPending}
-          >
-            Next
-          </Button>
-        </div>
+        <PaginationMedia
+          currentPage={currentPage}
+          totalPages={totalPages}
+          handlePageChange={handlePageChange}
+          isPending={isPending}
+        />
       </section>
     </main>
   );

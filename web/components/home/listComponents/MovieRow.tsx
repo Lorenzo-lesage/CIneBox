@@ -25,6 +25,7 @@ export function MovieRow({
   genreId,
   rowStyle = "default",
   type,
+  isLoading,
 }: MovieRowProps) {
   /*
   |--------------------------------------------------------------------------
@@ -44,15 +45,19 @@ export function MovieRow({
 
       <div className="relative">
         <Carousel className="w-full group/row">
-          <CarouselContent className="pt-4 px-4 md:px-10 flex items-center">
+          <CarouselContent className="pt-4 px-4 md:px-10 flex items-center gap-1">
             {movies.map((movie) => (
               <CarouselItem
                 key={movie.id}
                 className={cn(
-                  "basis-[40%] sm:basis-[45%] md:basis-[33%] lg:basis-[24%] xl:basis-[20%] pl-2",
+                  "basis-[40%] sm:basis-[45%] md:basis-[33%] lg:basis-[24%] xl:basis-[20%] pl-0",
                 )}
               >
-                <MovieCard movie={movie} rowStyle={rowStyle} type={type} />
+                {isLoading ? (
+                  <div className="h-45 w-full animate-pulse rounded-md bg-zinc-800/40" />
+                ) : (
+                  <MovieCard movie={movie} rowStyle={rowStyle} type={type} />
+                )}
               </CarouselItem>
             ))}
 
@@ -62,7 +67,10 @@ export function MovieRow({
                   "basis-[40%] sm:basis-[40%] md:basis-[30%] lg:basis-[20%] xl:basis-[10%] pl-3 ml-3",
                 )}
               >
-                <Link href={`/genres/${type}/${genreId}`} className="group h-45 block">
+                <Link
+                  href={`/genres/${type}/${genreId}`}
+                  className="group h-45 block"
+                >
                   <div className="h-full bg-zinc-900/40 rounded-md border-2 border-dashed border-zinc-800 group-hover:border-red-600 group-hover:bg-zinc-900 transition-all flex flex-col items-center justify-center gap-3">
                     <div className="p-3 rounded-full bg-zinc-800 group-hover:bg-red-600 transition-colors">
                       <ChevronRight className="w-6 h-6 text-white" />

@@ -42,26 +42,26 @@ export function MovieCardPlayer({
       <div
         className={cn(
           "relative w-full h-50 group",
-          rowStyle === "bigger" && "h-86",
+          rowStyle === "bigger" && "h-50 md:h-86 aspect-[2/3]",
         )}
       >
         <MovieImage
           src={`https://image.tmdb.org/t/p/w780${isMobile || rowStyle === "bigger" ? movie.poster_path : movie.backdrop_path || movie.poster_path}`}
           alt={movie.title || movie.name || "Poster"}
           className={cn(
-            "object-cover transition-opacity duration-500 z-10 w-full", // Aggiunto w-full
+            "object-cover transition-opacity duration-500 z-10 w-full rounded-lg",
             showVideo && !isMobile ? "opacity-0" : "opacity-100",
             rowStyle === "bigger"
-              ? "h-86 md:h-86 aspect-[2/3] object-cover"
+              ? "h-50 md:h-86 aspect-[2/3] object-cover"
               : "h-full object-cover",
           )}
         />
         {/* Overlay gradient */}
-        <div className="absolute -bottom-1 inset-0 bg-gradient-to-t from-background via-transparent to-transparent pointer-events-none" />
+        <div className="absolute -bottom-1 inset-0 bg-gradient-to-t from-background via-transparent to-transparent pointer-events-none md:block hidden" />
 
         {/* Player Video at hover */}
         {showVideo && trailerKey && !isMobile && (
-          <div className="absolute inset-0 z-20 bg-black">
+          <div className="absolute inset-0 z-20 bg-black rounded-t-lg overflow-hidden">
             <div className="relative h-full w-full">
               <ReactPlayer
                 ref={playerRef}
@@ -82,7 +82,7 @@ export function MovieCardPlayer({
             </div>
           </div>
         )}
-        <div className="hidden group-hover:block absolute -bottom-10 z-50 w-full px-4 space-y-1 bg-background">
+        <div className="hidden group-hover:block absolute -bottom-10 z-50 w-full px-4 space-y-1 bg-background rounded-lg">
           <p className="text-primary truncate">
             {movie.genres.map((genre) => genre).join(" - ")}
           </p>

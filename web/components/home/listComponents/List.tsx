@@ -10,7 +10,12 @@ const primaryRows = [
   { title: "Trending Now", dataKey: "popularList" },
 ] as const;
 
-export function List({ processedData, isFetchingNextPage, type }: HomeListProps) {
+export function List({
+  processedData,
+  isFetchingNextPage,
+  type,
+  isLoading,
+}: HomeListProps) {
   /*
   |--------------------------------------------------------------------------
   | Data
@@ -28,25 +33,27 @@ export function List({ processedData, isFetchingNextPage, type }: HomeListProps)
   return (
     <>
       <div className="space-y-2">
-        <div className="ps-0 md:ps-20">
+        <div className="md:ps-10 px-1 md:px-0">
           {primaryRows.map((row) => (
             <MovieRow
               key={row.dataKey}
               title={row.title}
               movies={processedData[row.dataKey]}
               type={type}
+              isLoading={isLoading}
             />
           ))}
         </div>
 
         {featuredMovie && <BannerList featuredMovie={featuredMovie} />}
 
-        <div className="ps-0 md:ps-20">
+        <div className="md:ps-10 px-1 md:px-0">
           <MovieRow
             title="top rated"
             movies={processedData.topRatedList}
             rowStyle="bigger"
             type={type}
+            isLoading={isLoading}
           />
 
           {processedData.genres.map((genre) => (
@@ -56,6 +63,7 @@ export function List({ processedData, isFetchingNextPage, type }: HomeListProps)
               movies={genre.data || []}
               genreId={genre.genreId}
               type={type}
+              isLoading={isLoading}
             />
           ))}
         </div>
