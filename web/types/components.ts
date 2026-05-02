@@ -55,6 +55,12 @@ export interface HeroTrailerModalProps {
   setOpenTrailer: (open: boolean) => void;
 }
 
+export interface SwitcherProps {
+  type: "movie" | "tv";
+  setType: (type: "movie" | "tv") => void;
+  isPending: boolean;
+}
+
 export interface MovieRowProps {
   title: string;
   movies: Movie[];

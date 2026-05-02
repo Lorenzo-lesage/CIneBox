@@ -44,7 +44,12 @@ export function MovieRow({
       </div>
 
       <div className="relative">
-        <Carousel className="w-full group/row">
+        <Carousel
+          className="w-full group/row"
+          opts={{
+            dragFree: true,
+          }}
+        >
           <CarouselContent className="pt-4 px-4 md:px-10 flex items-center gap-1">
             {movies.map((movie) => (
               <CarouselItem

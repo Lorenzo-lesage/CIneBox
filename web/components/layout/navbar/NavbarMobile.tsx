@@ -47,11 +47,11 @@ export function NavbarMobile() {
   */
 
   return (
-    <nav className="absolute top-0 w-full z-50 bg-transparent">
+    <nav className="fixed bottom-0 w-full z-50 bg-background">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 ">
           {/* Logo o Brand */}
-          <div className="flex-shrink-0 font-bold text-xl tracking-tight">
+          <div className="flex-shrink-0 font-bold text-xl tracking-tight flex">
             <Link
               href="/"
               className="hover:opacity-80 transition-opacity font-black text-white"
@@ -68,6 +68,7 @@ export function NavbarMobile() {
               />
             </Link>
           </div>
+          <ThemeSwitcherMobile />
 
           <Sheet>
             <SheetTrigger>
@@ -120,9 +121,7 @@ export function NavbarMobile() {
                   </Link>
                 </SheetClose>
               </div>
-              <SheetFooter>
-                <ThemeSwitcherMobile />
-              </SheetFooter>
+              <SheetFooter></SheetFooter>
             </SheetContent>
           </Sheet>
         </div>

@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState, useMemo } from "react";
 import { useInView } from "react-intersection-observer";
+import { useTransition } from "react";
 
 // React Query & Services
 import { useInfiniteQuery } from "@tanstack/react-query";
@@ -34,6 +35,7 @@ export default function HomePageClient({
   const currentTrailer =
     type === "movie" ? initialMovieTrailerData : initialTvTrailerData;
   const trailerKey = currentTrailer?.trailer_key || null;
+  const [isPending, startTransition] = useTransition();
 
   /*
   |--------------------------------------------------------------------------
@@ -41,7 +43,7 @@ export default function HomePageClient({
   |--------------------------------------------------------------------------
   */
 
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isFetching } =
     useInfiniteQuery({
       queryKey: ["homeData", type],
       queryFn: ({ pageParam = 1 }) => fetchHomeData(type, pageParam),
@@ -51,6 +53,7 @@ export default function HomePageClient({
       staleTime: 1000 * 60 * 5,
     });
   const isInitialLoading = !data && !serverData;
+  const isSwitching = isFetching && !isFetchingNextPage;
 
   /*
   |--------------------------------------------------------------------------
@@ -71,6 +74,9 @@ export default function HomePageClient({
   */
 
   const processedData = useMemo(() => {
+    if (isSwitching && !data) {
+      return { heroList: [], popularList: [], topRatedList: [], genres: [] };
+    }
     // Generi della pagina 1 (Server)
     const initialGenres = Object.keys(serverData)
       .filter(
@@ -103,7 +109,13 @@ export default function HomePageClient({
       topRatedList: serverData.top_rated || [],
       genres: [...initialGenres, ...extraGenres],
     };
-  }, [data, serverData]);
+  }, [data, serverData, isSwitching]);
+
+  const handleTypeChange = (newType: "movie" | "tv") => {
+    startTransition(() => {
+      setType(newType);
+    });
+  };
 
   /*
   |--------------------------------------------------------------------------
@@ -112,7 +124,13 @@ export default function HomePageClient({
   */
 
   return (
-    <main className="min-h-screen pb-20">
+    <main
+      className={
+        isPending
+          ? "opacity-50 transition-opacity min-h-screen pb-20"
+          : "opacity-100 min-h-screen pb-20"
+      }
+    >
       {/* --- Hero Header ---- */}
       <HeroBanner
         movie={serverData.hero[0]}
@@ -131,16 +149,22 @@ export default function HomePageClient({
 
       {/* --- Switchers --- */}
       <div className="mt-10 w-full flex justify-center">
-        <Switcher type={type} setType={setType} />
+        <Switcher
+          type={type}
+          setType={handleTypeChange}
+          isPending={isPending}
+        />
       </div>
 
       {/* --- Movies --- */}
-      <List
-        processedData={processedData}
-        isFetchingNextPage={isFetchingNextPage}
-        type={type}
-        isLoading={isInitialLoading}
-      />
+      <div>
+        <List
+          processedData={processedData}
+          isFetchingNextPage={isFetchingNextPage}
+          type={type}
+          isLoading={isInitialLoading || isSwitching}
+        />
+      </div>
     </main>
   );
 }

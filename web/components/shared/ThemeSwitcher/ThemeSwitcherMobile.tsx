@@ -3,16 +3,15 @@
 // Theme
 import { useTheme } from "next-themes";
 
-// Components
-import { ThemeItem } from "./ThemeItem";
-
 // UI
 import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 // Icons
 import { Sun, Moon, Monitor } from "lucide-react";
@@ -31,51 +30,40 @@ export function ThemeSwitcherMobile() {
   |---------------------------------------------------------------------------
   */
   return (
-    <>
-      <Accordion type="single" collapsible className="w-full border-none">
-        <AccordionItem value="item-1">
-          <AccordionTrigger>
-            {theme === "system" && (
-              <div className="gap-2 flex items-center">
-                <p>System</p>
-                <Monitor className="h-4 w-4 mr-2" />
-              </div>
-            )}
-            {theme === "light" && (
-              <div className="gap-2 flex items-center">
-                <p>Light</p>
-                <Sun className="h-4 w-4 mr-2" />
-              </div>
-            )}
-            {theme === "dark" && (
-              <div className="gap-2 flex items-center">
-                <p>Dark</p>
-                <Moon className="h-4 w-4 mr-2" />
-              </div>
-            )}
-          </AccordionTrigger>
-          <AccordionContent>
-            <ThemeItem
-              active={theme === "light"}
-              onClick={() => setTheme("light")}
-              icon={<Sun className="h-4 w-4" />}
-              label="Light"
-            />
-            <ThemeItem
-              active={theme === "dark"}
-              onClick={() => setTheme("dark")}
-              icon={<Moon className="h-4 w-4" />}
-              label="Dark"
-            />
-            <ThemeItem
-              active={theme === "system"}
-              onClick={() => setTheme("system")}
-              icon={<Monitor className="h-4 w-4" />}
-              label="System"
-            />
-          </AccordionContent>
-        </AccordionItem>
-      </Accordion>
-    </>
+    <div className="px-2">
+      <Select value={theme} onValueChange={(val) => setTheme(val)}>
+        <SelectTrigger className="bg-transparent font-bold [&>svg]:hidden">
+          <SelectValue placeholder="Select theme" />
+        </SelectTrigger>
+
+        <SelectContent
+          side="bottom"
+          className="w-11 min-w-[2.75rem] p-0 [&_.absolute]:hidden"
+        >
+          <SelectGroup>
+            <SelectItem
+              value="light"
+              className="pl-2 pr-2 justify-center cursor-pointer"
+            >
+              <Sun className="h-4 w-4" />
+            </SelectItem>
+
+            <SelectItem
+              value="dark"
+              className="pl-2 pr-2 justify-center cursor-pointer"
+            >
+              <Moon className="h-4 w-4" />
+            </SelectItem>
+
+            <SelectItem
+              value="system"
+              className="pl-2 pr-2 justify-center cursor-pointer"
+            >
+              <Monitor className="h-4 w-4" />
+            </SelectItem>
+          </SelectGroup>
+        </SelectContent>
+      </Select>
+    </div>
   );
 }

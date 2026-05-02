@@ -15,7 +15,7 @@ export default function GenresGrid({ initialData, type, isPending }: Genre) {
   */
 
   return (
-    <div className="grid gap-1 w-full mt-10 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+    <div className="grid gap-5 md:gap-1 w-full mt-10 grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
       {isPending
         ? Array.from({ length: 15 }).map((_, i) => (
             <div
