@@ -30,19 +30,19 @@ export function SortBy({
         value={currentSortBy}
         onValueChange={(value) => handleSortChange(value)}
       >
-        <SelectTrigger className="w-full md:w-[220px]">
+        <SelectTrigger className="w-full md:w-[220px] rounded-lg">
           <SelectValue placeholder={currentSortBy} />
         </SelectTrigger>
         <SelectContent
           position="popper"
-          className="absolute top-[-2.5rem] left-1/2 -translate-x-1/2 -translate-y-1/2"
+          className="absolute top-[-2.5rem] left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-lg"
         >
           <SelectGroup>
             {sortOptions.map((option) => (
               <SelectItem
                 key={option.value}
                 value={option.value}
-                className="cursor-pointer"
+                className="cursor-pointer rounded-lg"
               >
                 {option.label}
               </SelectItem>

@@ -108,7 +108,7 @@ export function MovieCard({ movie, rowStyle = "default", type }: MovieCardProps)
   return (
     <Card
       className={cn(
-        "h-50 md:h-64 bg-transparent !border-0 !ring-0 p-0 group cursor-pointer overflow-visible rounded-xl",
+        "h-50 md:h-50 bg-transparent !border-0 !ring-0 p-0 group cursor-pointer overflow-visible rounded-xl",
         rowStyle === "bigger" && "h-50 md:h-100",
       )}
       onMouseEnter={handleMouseEnter}
@@ -129,7 +129,7 @@ export function MovieCard({ movie, rowStyle = "default", type }: MovieCardProps)
         />
 
         {/* --- Content Card --- */}
-        <div className="absolute inset-0 flex flex-col justify-end md:p-4 p-1">
+        <div className="absolute inset-0 flex flex-col justify-end md:px-4 md:pb-2 p-1">
           {/* Button detail and like */}
           <div className="absolute top-0 right-[50%] text-white transform translate-x-1/2 -translate-y-1/2 flex items-center gap-2 group-hover:z-21">
             <MovieCardControls

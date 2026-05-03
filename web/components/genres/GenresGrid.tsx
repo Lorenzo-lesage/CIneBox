@@ -15,7 +15,7 @@ export default function GenresGrid({ initialData, type, isPending }: Genre) {
   */
 
   return (
-    <div className="grid gap-5 md:gap-1 w-full mt-10 grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+    <div className="grid gap-5 md:gap-1 w-full mt-20 grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
       {isPending
         ? Array.from({ length: 15 }).map((_, i) => (
             <div
@@ -24,7 +24,12 @@ export default function GenresGrid({ initialData, type, isPending }: Genre) {
             />
           ))
         : initialData.data.map((movie: Movie) => (
-            <MovieCard key={movie.id} movie={movie} type={type} />
+            <div
+              key={movie.id}
+              className="mb-15"
+            >
+              <MovieCard key={movie.id} movie={movie} type={type} />
+            </div>
           ))}
     </div>
   );
