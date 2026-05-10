@@ -12,5 +12,6 @@ export const apiConfig = {
       page: number,
       sortBy: string,
     ) => `/genres/${type}/${genreId}/paginated?page=${page}&sort_by=${sortBy}`,
+    search: () => "/search",
   },
 };

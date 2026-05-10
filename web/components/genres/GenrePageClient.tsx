@@ -4,7 +4,7 @@ import { useTransition } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 // Components
-import GenresGrid from "@/components/genres/GenresGrid";
+import MediaGrid from "@/components/shared/MediaGrid";
 import { SortBy } from "@/components/shared/SortBy";
 import { PaginationMedia } from "@/components/shared/PaginationMedia";
 
@@ -109,7 +109,7 @@ export default function GenrePageClient({
             </p>
           </div>
         ) : (
-          <GenresGrid
+          <MediaGrid
             initialData={initialData}
             type={type}
             isPending={isPending}

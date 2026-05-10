@@ -47,7 +47,7 @@ export function MovieRow({
           <div className="flex items-center justify-between px-4 md:px-10">
             {genreId ? (
               <Link
-                href={`/genre/${genreId}`}
+                href={`/genres/${type}/${genreId}`}
                 className="flex items-center gap-2 hover:opacity-80 transition-opacity hover:underline group"
                 style={{ textShadow: "0px 0px 2px rgb(32, 3, 3)" }}
               >

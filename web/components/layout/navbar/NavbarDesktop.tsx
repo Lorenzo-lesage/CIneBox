@@ -8,7 +8,7 @@ import { usePathname } from "next/navigation";
 import { ThemeSwitcher } from "@/components/shared/ThemeSwitcher/ThemeSwitcher";
 
 // Icons
-import { LogIn } from "lucide-react";
+import { LogIn, Search } from "lucide-react";
 
 // Logo
 import CineLogo from "@/public/images/CineLogo.png";
@@ -23,13 +23,13 @@ export function NavbarDesktop() {
   const pathname = usePathname();
   const isLinkActive = (href: string) => pathname === href;
   const isNotHome = pathname !== "/";
-  const linkStyles = isNotHome ?
-    "text-primary flex items-center" :
-    "transition-opacity font-black text-white flex items-center";
+  const linkStyles = isNotHome
+    ? "text-primary flex items-center font-black "
+    : "transition-opacity text-white flex items-center";
   const activeStyles = isNotHome
-    ? "text-primary opacity-100"
+    ? "text-primary opacity-20 font-black "
     : "text-white opacity-20 cursor-default pointer-events-none";
-  const inactiveStyles = "opacity-70 hover:border-b-2 border-primary";
+  const inactiveStyles = "opacity-70 hover:border-b-2 border-white border-primary font-black ";
 
   /*
   |---------------------------------------------------------------------------
@@ -62,6 +62,13 @@ export function NavbarDesktop() {
 
           {/* Links di navigazione */}
           <div className="flex space-x-8 items-center">
+            <Link
+              href="/search"
+              className={`${linkStyles} ${isLinkActive("/search") ? activeStyles : inactiveStyles}`}
+              style={{ textShadow: "0px 0px 2px rgb(32, 3, 3)" }}
+            >
+              <Search className="h-4 w-4 drop-shadow(2px 2px 6px rgba(0, 0, 0, 0.5)"/>
+            </Link>
             <Link
               href="/"
               className={`${linkStyles} ${isLinkActive("/") ? activeStyles : inactiveStyles}`}

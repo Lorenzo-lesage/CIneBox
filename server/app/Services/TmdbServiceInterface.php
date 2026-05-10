@@ -23,4 +23,6 @@ interface TmdbServiceInterface
         string $sortBy = 'popularity.desc',
         array $genre = [],
     ): GenreMediaListData;
+
+    public function getSearchMediaList(string $endpoint, array $params = [], int $page = 1, string $lang = 'en-US', string $sortBy = 'popularity.desc'): array;
 }

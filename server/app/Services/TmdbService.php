@@ -101,6 +101,43 @@ class TmdbService implements TmdbServiceInterface
     }
 
     /**
+     * Get a list of movies from TMDB
+     * Summary of getSearchMediaList
+     * @param string $endpoint
+     * @param array $params
+     * @param int $page
+     * @param string $lang
+     * @param string $sortBy
+     * @return array
+     */
+    public function getSearchMediaList(string $endpoint, array $params = [], int $page = 1, string $lang = 'en-US', string $sortBy = 'popularity.desc'): array
+    {
+        $response = $this->request('GET', "/{$endpoint}", array_merge([
+            'language' => $lang,
+            'page' => $page,
+            'sort_by' => $sortBy,
+        ], $params));
+
+        $data = $response->json();
+        $results = collect($data['results'] ?? []);
+
+        /*
+    | -------------------------------------------------------------------------
+    | Envelope Pattern
+    | -------------------------------------------------------------------------
+    | We return an envelope containing the results and the pagination info.
+    */
+        return [
+            'results' => $results->map(fn(array $movie) => MovieListData::fromTmdb($movie)->toArray())->toArray(),
+            'pagination' => [
+                'current_page' => (int) ($data['page'] ?? 1),
+                'total_pages'  => (int) ($data['total_pages'] ?? 1),
+                'total_results' => (int) ($data['total_results'] ?? 0),
+            ]
+        ];
+    }
+
+    /**
      * Get a paginated media list from TMDB.
      *
      * @param string $endpoint

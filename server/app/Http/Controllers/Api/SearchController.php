@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Services\TmdbServiceInterface;
+use Illuminate\Http\JsonResponse;
 
 class SearchController extends Controller
 {
@@ -12,17 +13,22 @@ class SearchController extends Controller
         protected TmdbServiceInterface $tmdbService
     ) {}
 
-    public function search(Request $request)
+    public function search(Request $request): JsonResponse
     {
-        $request->validate([
-            'q' => 'required|string|min:2',
-            'page' => 'integer|min:1'
+        $validated = $request->validate([
+            'q' => ['bail', 'required', 'string', 'min:1', 'max:100'],
+            'page' => ['nullable', 'integer', 'min:1'],
         ]);
 
-        return $this->tmdbService->getMediaList(
-            'search/movie',
-            ['query' => $request->input('q')],
-            $request->input('page', 1)
+        $results = $this->tmdbService->getSearchMediaList(
+            'search/multi',
+            [
+                'query' => trim($validated['q']),
+                'include_adult' => false,
+            ],
+            $validated['page'] ?? 1
         );
+
+        return response()->json($results);
     }
 }

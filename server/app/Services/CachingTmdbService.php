@@ -71,6 +71,25 @@ class CachingTmdbService implements TmdbServiceInterface
     }
 
     /**
+     * Summary of getSearchMediaList
+     * @param string $endpoint
+     * @param array $params
+     * @param int $page
+     * @param string $lang
+     * @param string $sortBy
+     * @return array
+     */
+    public function getSearchMediaList(string $endpoint, array $params = [], int $page = 1, string $lang = 'en-US', string $sortBy = 'popularity.desc'): array
+    {
+        $cacheKey = "Search_" . md5($endpoint . serialize($params) . $page . $lang . $sortBy);
+
+        return Cache::tags(['search'])->remember($cacheKey, now()->addHours(6), function () use ($endpoint, $lang, $params, $page, $sortBy) {
+            return $this->inner->getSearchMediaList($endpoint, $params, $page, $lang, $sortBy);
+        });
+    }
+
+
+    /**
      * Get a paginated media list from TMDB.
      *
      * @param string $endpoint

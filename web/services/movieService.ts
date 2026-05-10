@@ -1,6 +1,9 @@
 import axiosClient from "../lib/axiosClient";
 import { apiConfig } from "../config/apiConfig";
 
+// Type
+import type { SearchMediaResponse } from "@/types/search";
+
 /**
  * Fetch Home page data
  * @param type
@@ -58,6 +61,30 @@ export const fetchPaginatedGenreMedia = async (
   const response = await axiosClient.get(
     apiConfig.endpoints.paginatedMediasByGenre(type, genreId, page, sortBy),
   );
+
+  return response.data;
+};
+
+/**
+ * Search media by title or actor name.
+ *
+ * @param query - Search text typed by the user.
+ * @param page - Results page.
+ * @param signal - Abort signal used to cancel outdated requests.
+ * @returns Search media results.
+ */
+export const fetchSearchMedia = async (
+  query: string,
+  page: number = 1,
+  signal?: AbortSignal,
+): Promise<SearchMediaResponse> => {
+  const response = await axiosClient.get(apiConfig.endpoints.search(), {
+    params: {
+      q: query,
+      page,
+    },
+    signal,
+  });
 
   return response.data;
 };
