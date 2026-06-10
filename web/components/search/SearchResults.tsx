@@ -42,16 +42,16 @@ export function SearchResults({
 
   return (
     <div>
-      <div className="grid gap-x-5 gap-y-10 w-full mt-10 grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 pb-10">
+      <div className="grid gap-x-5 gap-y-5 w-full mt-10 grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 pb-10">
         {isPending && !data
           ? Array.from({ length: 10 }).map((_, i) => (
               <div
                 key={i}
-                className="h-58 w-full animate-pulse rounded-xl bg-zinc-800/50 mb-15"
+                className="h-58 w-full animate-pulse rounded-xl bg-zinc-800/50 md:mb-15 mb-5"
               />
             ))
           : data?.results?.map((media: Movie) => (
-              <div key={media.id} className="w-full">
+              <div key={media.id} className="w-full md:mb-15 mb-5">
                 <MovieCard movie={media} type={media.media_type} />
               </div>
             ))}

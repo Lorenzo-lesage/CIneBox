@@ -1,3 +1,4 @@
+import { useRef, useState } from "react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 
@@ -29,6 +30,30 @@ export function MovieRow({
 }: MovieRowProps) {
   /*
   |--------------------------------------------------------------------------
+  | Data
+  |--------------------------------------------------------------------------
+  */
+
+  const linkRef = useRef<HTMLAnchorElement>(null);
+  const titleRef = useRef<HTMLHeadingElement>(null);
+  const [chevronTranslate, setChevronTranslate] = useState(0);
+
+  /*
+  |--------------------------------------------------------------------------
+  | Methods
+  |--------------------------------------------------------------------------
+  */
+
+  const handleMouseEnter = () => {
+    if (linkRef.current && titleRef.current) {
+      const linkLeft = linkRef.current.getBoundingClientRect().left;
+      const titleRight = titleRef.current.getBoundingClientRect().right;
+      setChevronTranslate(titleRight - linkLeft + 8);
+    }
+  };
+
+  /*
+  |--------------------------------------------------------------------------
   | Render
   |--------------------------------------------------------------------------
   */
@@ -50,9 +75,18 @@ export function MovieRow({
                 href={`/genres/${type}/${genreId}`}
                 className="flex items-center gap-2 hover:opacity-80 transition-opacity hover:underline group"
                 style={{ textShadow: "0px 0px 2px rgb(32, 3, 3)" }}
+                ref={linkRef}
+                onMouseEnter={handleMouseEnter}
+                onMouseLeave={() => setChevronTranslate(0)}
               >
-                <ChevronRight className="h-5 w-5 group-hover:translate-x-40 transition-all duration-150" />
-                <h2 className="text-xl md:text-2xl font-semibold capitalize tracking-tight">
+                <ChevronRight
+                  className="h-5 w-5 transition-all duration-150 "
+                  style={{ transform: `translateX(${chevronTranslate}px)` }}
+                />
+                <h2
+                  ref={titleRef}
+                  className="text-xl md:text-2xl font-semibold capitalize tracking-tight"
+                >
                   {title}
                 </h2>
               </Link>
@@ -62,7 +96,7 @@ export function MovieRow({
               </h2>
             )}
 
-            <div className="items-center gap-2 bg-muted/20 rounded-lg hidden md:flex">
+            <div className="items-center gap-2 bg-muted/20 rounded-lg hidden md:flex my-4">
               <CarouselPrevious
                 className="
                 static translate-x-0 translate-y-0

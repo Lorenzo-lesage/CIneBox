@@ -10,6 +10,9 @@ import MovieImage from "./MovieImage";
 // Icons
 import { Volume2, VolumeOff } from "lucide-react";
 
+// Logo
+import Logo from "@/public/images/Logo.png";
+
 // types
 import { MovieCardPlayerProps } from "@/types/components";
 
@@ -46,24 +49,37 @@ export function MovieCardPlayer({
           rowStyle === "bigger" && "h-50 md:h-86 aspect-[2/3]",
         )}
       >
-        <MovieImage
-          src={`https://image.tmdb.org/t/p/w780${isMobile || rowStyle === "bigger" ? movie.poster_path : movie.backdrop_path || movie.poster_path}`}
-          alt={movie.title || movie.name || "Poster"}
-          className={cn(
-            "object-cover transition-opacity duration-500 z-10 w-full rounded-lg hover:rounded-t-lg hover:rounded-b-xs",
-            showVideo && !isMobile ? "opacity-0" : "opacity-100",
-            rowStyle === "bigger"
-              ? "h-50 md:h-86 aspect-[2/3] object-cover"
-              : "h-full object-cover",
-            noMedia && "bg-background",
-          )}
-        />
-        {/* Overlay gradient */}
         {noMedia ? (
-          <div className="absolute -bottom-0.5 inset-0 bg-background pointer-events-none md:block hidden rounded-t-lg" />
+          <div
+            className={cn(
+              "relative w-full bg-background rounded-lg overflow-hidden",
+              rowStyle === "bigger" ? "h-50 md:h-86 aspect-[2/3]" : "h-full",
+            )}
+          >
+            <MovieImage
+              src={Logo.src}
+              alt={movie.title || movie.name || "Poster"}
+              className={cn(
+                "object-contain transition-opacity duration-500 z-10 w-full h-full opacity-30",
+              )}
+            />
+          </div>
         ) : (
-          <div className="absolute -bottom-0.5 inset-0 bg-gradient-to-t from-background via-transparent to-transparent pointer-events-none md:block hidden" />
+          <MovieImage
+            src={`https://image.tmdb.org/t/p/w780${isMobile || rowStyle === "bigger" ? movie.poster_path : movie.backdrop_path || movie.poster_path}`}
+            alt={movie.title || movie.name || "Poster"}
+            className={cn(
+              "object-cover transition-opacity duration-500 z-10 w-full rounded-lg hover:rounded-t-lg hover:rounded-b-xs",
+              showVideo && !isMobile ? "opacity-0" : "opacity-100",
+              rowStyle === "bigger"
+                ? "h-50 md:h-86 aspect-[2/3] object-cover"
+                : "h-full object-cover",
+              noMedia && "bg-background",
+            )}
+          />
         )}
+
+        <div className="absolute -bottom-0.5 inset-0 bg-gradient-to-t from-background via-transparent to-transparent pointer-events-none md:block hidden" />
 
         {/* Player Video at hover */}
         {showVideo && trailerKey && !isMobile && (

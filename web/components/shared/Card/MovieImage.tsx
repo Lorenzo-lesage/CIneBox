@@ -4,7 +4,7 @@ import { LazyLoadImage } from 'react-lazy-load-image-component';
 import 'react-lazy-load-image-component/src/effects/blur.css';
 
 interface Props {
-    src: string;
+    src: string | undefined;
     alt: string | undefined;
     className?: string;
 }
